@@ -14,7 +14,7 @@ public class UserDAO {
 
     /**
      * Gets the list of Items from database
-     * @return HashMap<id, item> of Items from database
+     * @return HashMap<id, user> of Items from database
      */
     public static HashMap<Integer, User> getList() {
         HashMap<Integer, User> usersMap = new HashMap();
