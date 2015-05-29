@@ -58,6 +58,26 @@ public class UserDAO {
     }
     
     /**
+     * Counts numbers of Users
+     * @return Numbers of Users
+     */
+    public static Integer count(){
+        Integer size = -1;
+        try {
+            PreparedStatement query = connection.getConnection().prepareStatement("SELECT COUNT(*) FROM items");
+            ResultSet rs = query.executeQuery();
+            if (rs.next()) {
+                size = rs.getInt(0);
+            }
+            rs.close();
+            query.close();
+        } catch (Exception e) {
+            System.err.println("Can't get size of Item table from database. " + e);
+        }
+        return size;
+    }
+    
+    /**
      * Fills an User from a ResultSet
      * @param rs ResultSet
      * @return User filled from rs
