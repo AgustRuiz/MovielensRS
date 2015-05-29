@@ -8,49 +8,53 @@ import java.util.logging.Logger;
 
 /**
  * Connection to database
+ *
  * @author Agustin Ruiz Linares <arl00029@red.ujaen.es>
  */
 public class DbConnection {
 
     /// Database name
     private static String db = "ml-100k-mysql";
-    
+
     /// Username
-    private static String username = "root";
-    
+    private final static String username = "root";
+
     /// Password
-    private static String password = "";
-    
+    private final static String password = "";
+
     /// Connection URL
-    private static String url = "jdbc:mysql://localhost:3306/" + db;
+    private final static String url = "jdbc:mysql://localhost:3306/" + db;
 
     /// Connection
-    private Connection connection = null;
+    private static Connection connection = null;
 
     /**
      * Constructor
      */
-    public DbConnection() {
-        try {
-            Class.forName("com.mysql.jdbc.Driver");
-            connection = DriverManager.getConnection(url, username, password);
-            if (connection != null) {
-                System.out.println("Conection to " + db + " OK");
-            }
-        } catch (SQLException e) {
-            System.err.println(e);
-        } catch (ClassNotFoundException e) {
-            System.err.println(e);
-        } catch (Exception e) {
-            System.err.println(e);
-        }
+    private DbConnection() {
     }
 
     /**
      * Gets connection
+     *
      * @return Connection to database
      */
-    public Connection getConnection() {
+    public static Connection getConnection() {
+        if (connection == null ) {
+            try {
+                Class.forName("com.mysql.jdbc.Driver");
+                connection = DriverManager.getConnection(url, username, password);
+                if (connection != null) {
+                    //System.out.println("Conection to " + db + " OK");
+                }
+            } catch (SQLException e) {
+                System.err.println(e);
+            } catch (ClassNotFoundException e) {
+                System.err.println(e);
+            } catch (Exception e) {
+                System.err.println(e);
+            }
+        }
         return connection;
     }
 

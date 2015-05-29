@@ -13,9 +13,6 @@ import java.util.List;
  */
 public class ItemDAO {
 
-    /// Connection to database
-    static DbConnection connection = new DbConnection();
-
     /**
      * Gets the list of Items from database
      * @return HashMap<id, item> of Items from database
@@ -23,7 +20,7 @@ public class ItemDAO {
     public static HashMap<Integer, Item> getList() {
         HashMap<Integer, Item> itemsMap = new HashMap();
         try {
-            PreparedStatement query = connection.getConnection().prepareStatement("SELECT * FROM items");
+            PreparedStatement query = DbConnection.getConnection().prepareStatement("SELECT * FROM items");
             ResultSet rs = query.executeQuery();
             while (rs.next()) {
                 Item item = ItemDAO.fillItem(rs);
@@ -45,7 +42,7 @@ public class ItemDAO {
     public static Item get(int iditem) {
         Item item = null;
         try {
-            PreparedStatement query = connection.getConnection().prepareStatement("SELECT * FROM items WHERE iditem = " + iditem);
+            PreparedStatement query = DbConnection.getConnection().prepareStatement("SELECT * FROM items WHERE iditem = " + iditem);
             ResultSet rs = query.executeQuery();
             if (rs.next()) {
                 item = ItemDAO.fillItem(rs);
@@ -65,7 +62,7 @@ public class ItemDAO {
     public static Integer count(){
         Integer size = -1;
         try {
-            PreparedStatement query = connection.getConnection().prepareStatement("SELECT COUNT(*) FROM items");
+            PreparedStatement query = DbConnection.getConnection().prepareStatement("SELECT COUNT(*) FROM items");
             ResultSet rs = query.executeQuery();
             if (rs.next()) {
                 size = rs.getInt(1);

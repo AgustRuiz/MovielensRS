@@ -1,6 +1,6 @@
 package es.AgustRuiz.RecommenderSystem;
 
-import static es.AgustRuiz.RecommenderSystem.ItemDAO.connection;
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -12,9 +12,6 @@ import java.util.HashMap;
  */
 public class UserDAO {
 
-    /// Database connecion
-    static DbConnection connection = new DbConnection();
-
     /**
      * Gets the list of Items from database
      * @return HashMap<id, item> of Items from database
@@ -22,7 +19,7 @@ public class UserDAO {
     public static HashMap<Integer, User> getList() {
         HashMap<Integer, User> usersMap = new HashMap();
         try {
-            PreparedStatement query = connection.getConnection().prepareStatement("SELECT * FROM users");
+            PreparedStatement query = DbConnection.getConnection().prepareStatement("SELECT * FROM users");
             ResultSet rs = query.executeQuery();
             while (rs.next()) {
                 User user = UserDAO.fillUser(rs);
@@ -44,7 +41,7 @@ public class UserDAO {
     public static User get(int iduser) {
         User user = null;
         try {
-            PreparedStatement query = connection.getConnection().prepareStatement("SELECT * FROM users WHERE iduser = " + iduser);
+            PreparedStatement query = DbConnection.getConnection().prepareStatement("SELECT * FROM users WHERE iduser = " + iduser);
             ResultSet rs = query.executeQuery();
             if (rs.next()) {
                 user = UserDAO.fillUser(rs);
@@ -64,7 +61,7 @@ public class UserDAO {
     public static Integer count(){
         Integer size = -1;
         try {
-            PreparedStatement query = connection.getConnection().prepareStatement("SELECT COUNT(*) FROM users");
+            PreparedStatement query = DbConnection.getConnection().prepareStatement("SELECT COUNT(*) FROM users");
             ResultSet rs = query.executeQuery();
             if (rs.next()) {
                 size = rs.getInt(1);
