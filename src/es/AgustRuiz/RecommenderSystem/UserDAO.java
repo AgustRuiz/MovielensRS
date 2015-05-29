@@ -64,15 +64,15 @@ public class UserDAO {
     public static Integer count(){
         Integer size = -1;
         try {
-            PreparedStatement query = connection.getConnection().prepareStatement("SELECT COUNT(*) FROM items");
+            PreparedStatement query = connection.getConnection().prepareStatement("SELECT COUNT(*) FROM users");
             ResultSet rs = query.executeQuery();
             if (rs.next()) {
-                size = rs.getInt(0);
+                size = rs.getInt(1);
             }
             rs.close();
             query.close();
         } catch (Exception e) {
-            System.err.println("Can't get size of Item table from database. " + e);
+            System.err.println("Can't get size of Users table from database. " + e);
         }
         return size;
     }
