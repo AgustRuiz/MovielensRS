@@ -23,7 +23,7 @@ public class DbConnection {
     private final static String password = "";
 
     /// Connection URL
-    private final static String url = "jdbc:mysql://localhost:3306/" + db;
+    private final static String url = "jdbc:mysql://localhost:3306/" + db + "?zeroDateTimeBehavior=convertToNull";
 
     /// Connection
     private static Connection connection = null;
