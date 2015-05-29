@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package es.AgustRuiz.RecommenderSystem;
 
 import java.util.AbstractList;
@@ -10,12 +5,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- *
+ * Items class
  * @author Agustin Ruiz Linares <arl00029@red.ujaen.es>
  */
 public class Item {
 
-    /* VARIABLES */
+    /*** VARIABLES ***/
+    
     /// Item identificator
     private Integer iditem;
 
@@ -31,7 +27,7 @@ public class Item {
     // Genres Strings
     private List<String> genresStrings;
 
-    /* METHODS */
+    /*** METHODS ***/
     
     /**
      * Initialize variables
@@ -66,7 +62,6 @@ public class Item {
         for (int i = 0; i < this.numGenres; ++i) {
             this.genres.add(false);
         }
-
     }
     
     /**

@@ -1,35 +1,38 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package es.AgustRuiz.RecommenderSystem;
 
+import java.sql.Struct;
+
 /**
+ * User class
  *
  * @author Agustin Ruiz Linares <arl00029@red.ujaen.es>
  */
 public class User {
 
-    /* VARIABLES */
+    /**
+     * * VARIABLES **
+     */
     /// Item identificator
     Integer iduser;
-    
+
     /// User name
     String name;
-    
+
     /// User age
     Integer age;
-    
+
     /// User gender
     char gender;
-    
+
     /// User occupation
     String occupation;
-    
-    /// Zip code
-    Integer zipcode;
 
+    /// Zip code
+    String zipcode;
+
+    /**
+     * * METHODS **
+     */
     /**
      * Constructor
      */
@@ -38,6 +41,7 @@ public class User {
 
     /**
      * Get user id
+     *
      * @return User id
      */
     public Integer getIduser() {
@@ -46,6 +50,7 @@ public class User {
 
     /**
      * Set user id
+     *
      * @param iduser User id
      */
     public void setIduser(Integer iduser) {
@@ -54,6 +59,7 @@ public class User {
 
     /**
      * Get user name
+     *
      * @return User name
      */
     public String getName() {
@@ -62,6 +68,7 @@ public class User {
 
     /**
      * Set user name
+     *
      * @param name User name
      */
     public void setName(String name) {
@@ -70,6 +77,7 @@ public class User {
 
     /**
      * Get user age
+     *
      * @return User age
      */
     public Integer getAge() {
@@ -78,6 +86,7 @@ public class User {
 
     /**
      * Set user age
+     *
      * @param age User age
      */
     public void setAge(Integer age) {
@@ -86,6 +95,7 @@ public class User {
 
     /**
      * Get user gender
+     *
      * @return User gender
      */
     public char getGender() {
@@ -94,14 +104,20 @@ public class User {
 
     /**
      * Set user gender
+     *
      * @param gender User gender
      */
     public void setGender(char gender) {
-        this.gender = gender;
+        if (Gender.isValidGender(gender)){
+            this.gender = gender;
+        }else{
+            this.gender = Gender.UNDEFINED;
+        }
     }
 
     /**
      * Get user occupation
+     *
      * @return User occupation
      */
     public String getOccupation() {
@@ -110,6 +126,7 @@ public class User {
 
     /**
      * Set user occupation
+     *
      * @param occupation User occupation
      */
     public void setOccupation(String occupation) {
@@ -118,17 +135,42 @@ public class User {
 
     /**
      * Get user zip code
+     *
      * @return User zip code
      */
-    public Integer getZipcode() {
+    public String getZipcode() {
         return zipcode;
     }
 
     /**
      * Set user zipcode
+     *
      * @param zipcode User zip code
      */
-    public void setZipcode(Integer zipcode) {
+    public void setZipcode(String zipcode) {
         this.zipcode = zipcode;
     }
 }
+
+/**
+ * Gender class
+ *
+ * @author Agustin Ruiz Linares <arl00029@red.ujaen.es>
+ */
+class Gender {
+
+    public static final char UNDEFINED = '-';
+    public static final String UNDEFINED_STRING = "undefined";
+    public static final char MALE = 'M';
+    public static final String MALE_STRING = "Male";
+    public static final char FEMALE = 'F';
+    public static final String FEMALE_STRING = "Female";
+
+    public static Boolean isValidGender(char gender) {
+        if (gender == Gender.MALE || gender == Gender.FEMALE) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+};

@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package es.AgustRuiz.RecommenderSystem;
 
 import java.sql.PreparedStatement;
@@ -18,8 +13,13 @@ import java.util.List;
  */
 public class ItemDAO {
 
+    /// Connection to database
     static DbConnection connection = new DbConnection();
 
+    /**
+     * Gets the list of Items from database
+     * @return HashMap<id, item> of Items from database
+     */
     public static HashMap<Integer, Item> getList() {
         HashMap<Integer, Item> itemsMap = new HashMap();
         try {
@@ -37,10 +37,15 @@ public class ItemDAO {
         return itemsMap;
     }
 
-    public static Item get(int position) {
+    /**
+     * Gets an Item from database
+     * @param iditem Item Id fo filter
+     * @return The first item found with iditem or null otherwise
+     */
+    public static Item get(int iditem) {
         Item item = null;
         try {
-            PreparedStatement query = connection.getConnection().prepareStatement("SELECT * FROM items WHERE iditem = " + position);
+            PreparedStatement query = connection.getConnection().prepareStatement("SELECT * FROM items WHERE iditem = " + iditem);
             ResultSet rs = query.executeQuery();
             if (rs.next()) {
                 item = ItemDAO.getItem(rs);
@@ -48,7 +53,7 @@ public class ItemDAO {
             rs.close();
             query.close();
         } catch (Exception e) {
-            System.err.println("Can't get item " + position + " from database. " + e);
+            System.err.println("Can't get item " + iditem + " from database. " + e);
         }
         return item;
     }
