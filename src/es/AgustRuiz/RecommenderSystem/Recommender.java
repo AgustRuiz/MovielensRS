@@ -6,8 +6,11 @@
 package es.AgustRuiz.RecommenderSystem;
 
 import static java.lang.Math.sqrt;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Map.Entry;
+import java.util.TreeMap;
 
 /**
  *
@@ -27,10 +30,6 @@ public class Recommender {
 
         float avgUser1 = Recommender.avgRatings(ratingsUser1);
         float avgUser2 = Recommender.avgRatings(ratingsUser2);
-
-        System.out.println("Media del usuario 1 " + user1.getIduser() + ": " + avgUser1);
-        System.out.println("Media del usuario 2 " + user2.getIduser() + ": " + avgUser2);
-
         float dividend = 0f;
         float divisorSub1 = 0f;
         float divisorSub2 = 0f;
@@ -48,6 +47,41 @@ public class Recommender {
         float divisor = (float)(sqrt(divisorSub1*divisorSub2));
         
         return dividend / divisor;
+    }
+    
+    /**
+     * Return the K nearest neighbors
+     * @param activeUser Active user
+     * @param K Size of neighbours
+     * @return HashMap<Id, User> with the K Nearest Neighbours to the active User
+     */
+    public static HashMap<Integer, User> KNN(User activeUser, int K){
+        Map<Float, User> similarUsersMap = new TreeMap(Collections.reverseOrder());
+        
+        int activeUserId = activeUser.getIduser();
+
+        for (User currentUser : UserDAO.getList().values()) {
+            if (!currentUser.getIduser().equals(activeUserId)) {
+                float similarity = Recommender.Similarity(activeUser, currentUser);
+                if (similarity > 0) {
+                    similarUsersMap.put(similarity, currentUser);
+                }
+            }
+        }
+
+        //System.out.println(usuariosSimilares.size());
+        HashMap<Integer, User> neighbor = new HashMap();
+
+        int i = 0;
+        for (Float key : similarUsersMap.keySet()) {
+            neighbor.put(similarUsersMap.get(key).getIduser(), similarUsersMap.get(key));
+            ++i;
+            if (i == K) {
+                break;
+            }
+        }
+        
+        return neighbor;
     }
 
     /**
