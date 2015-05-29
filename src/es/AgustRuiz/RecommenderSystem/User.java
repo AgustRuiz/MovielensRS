@@ -151,6 +151,10 @@ public class User {
         this.zipcode = zipcode;
     }
     
+    /**
+     * Get the User information in a string
+     * @return String with User information
+     */
     public String toString(){
         String s = "[USER] Id: " + this.iduser +
                 ", Name: " + this.name +

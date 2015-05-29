@@ -468,6 +468,10 @@ public class Item {
         this.genres.set(17, value);
     }
 
+    /**
+     * Get the Item information in a string
+     * @return String with Item information
+     */
     public String toString() {
         String s = "[ITEM] Id: " + this.iditem + ", Name: " + this.name;
         s += ", Genres: {";
