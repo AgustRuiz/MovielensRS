@@ -150,6 +150,16 @@ public class User {
     public void setZipcode(String zipcode) {
         this.zipcode = zipcode;
     }
+    
+    public String toString(){
+        String s = "[USER] Id: " + this.iduser +
+                ", Name: " + this.name +
+                ", Age: " + this.age +
+                ", Gender: " + this.gender +
+                ", Occupation: " + this.occupation +
+                ", zipcode: " + this.zipcode + ".";
+        return s;
+    }
 }
 
 /**
