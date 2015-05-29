@@ -469,7 +469,7 @@ public class Item {
     }
 
     public String toString() {
-        String s = "Id: " + this.iditem + ", Name: " + this.name;
+        String s = "[ITEM] Id: " + this.iditem + ", Name: " + this.name;
         s += ", Genres: {";
         if (this.isUnknownGenre()) {
             s += "unknown";
