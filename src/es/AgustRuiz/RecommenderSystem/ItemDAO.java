@@ -26,7 +26,7 @@ public class ItemDAO {
             PreparedStatement query = connection.getConnection().prepareStatement("SELECT * FROM items");
             ResultSet rs = query.executeQuery();
             while (rs.next()) {
-                Item item = ItemDAO.getItem(rs);
+                Item item = ItemDAO.fillItem(rs);
                 itemsMap.put(item.getIditem(), item);
             }
             rs.close();
@@ -48,7 +48,7 @@ public class ItemDAO {
             PreparedStatement query = connection.getConnection().prepareStatement("SELECT * FROM items WHERE iditem = " + iditem);
             ResultSet rs = query.executeQuery();
             if (rs.next()) {
-                item = ItemDAO.getItem(rs);
+                item = ItemDAO.fillItem(rs);
             }
             rs.close();
             query.close();
@@ -64,7 +64,7 @@ public class ItemDAO {
      * @return Item filled from rs
      * @throws SQLException 
      */
-    private static Item getItem(ResultSet rs) throws SQLException {
+    private static Item fillItem(ResultSet rs) throws SQLException {
         Item item = new Item(Integer.parseInt(rs.getString("iditem")), rs.getString("name"));
         item.setActionGenre(booleanParser(rs.getString("Action")));
         item.setAdventureGenre(booleanParser(rs.getString("Adventure")));
