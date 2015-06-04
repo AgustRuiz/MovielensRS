@@ -47,7 +47,7 @@ public class RatingDAO {
      * Get all a user ratings
      *
      * @param iduser User id
-     * @return List of ratings of the User
+     * @return HashMap<Iditem, Rating> of ratings of the User
      */
     public static HashMap<Integer, Rating> getRatingsOfUser(int iduser) {
         HashMap<Integer, Rating> ratingMap = new HashMap();
@@ -96,11 +96,31 @@ public class RatingDAO {
      */
     private static Rating fillRatings(ResultSet rs) throws SQLException {
         Rating rating = new Rating();
-        rating.setIduser(Integer.parseInt(rs.getString("iduser")));
-        rating.setIditem(Integer.parseInt(rs.getString("iditem")));
-        rating.setRating(Float.parseFloat(rs.getString("rating")));
+        rating.setIduser(rs.getInt("iduser"));
+        rating.setIditem(rs.getInt("iditem"));
+        rating.setRating(rs.getDouble("rating"));
         rating.setTimestamp(TimestampParser(rs.getString("timestamp")));
         return rating;
+    }
+    
+    /**
+     * Gets average of ratings of an user
+     * @param iduser User id
+     * @return Average of ratings
+     */
+    public static Double avgRatings(int iduser) {
+        Double avgRatings = null;
+        try {
+            PreparedStatement query = DbConnection.getConnection().prepareStatement("SELECT AVG(rating) FROM `ratings` WHERE iduser=" + iduser);
+            ResultSet rs = query.executeQuery();
+            rs.next();
+            avgRatings = rs.getDouble(1);
+            rs.close();
+            query.close();
+        } catch (Exception e) {
+            System.err.println("Can't get avg of ratings from database. " + e);
+        }
+        return avgRatings;
     }
 
     /**

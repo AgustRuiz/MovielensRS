@@ -9,13 +9,14 @@ import java.util.HashMap;
  */
 public class RatingMatrix {
 
-    /// Matrix
-    private HashMap<Integer, HashMap<Integer, Float>> matrix;
+    /// Matrix < Iditem, < Iduser, Rating > >
+    private HashMap<Integer, HashMap<Integer, Double>> matrix;
 
     /**
      * Constructor
      */
     public RatingMatrix() {
+        matrix = new HashMap<>();
     }
 
     /**
@@ -24,11 +25,11 @@ public class RatingMatrix {
      * @param itemid Item Id
      * @param rating Rating
      */
-    public void set(int userid, int itemid, float rating) {
-        if (!matrix.containsKey(userid)) {
-            matrix.put(userid, new HashMap<Integer, Float>());
+    public void set(int userid, int itemid, double rating) {
+        if (!matrix.containsKey(itemid)) {
+            matrix.put(itemid, new HashMap<Integer, Double>());
         }
-        matrix.get(userid).put(itemid, rating);
+        matrix.get(itemid).put(userid, rating);
     }
 
     /**
@@ -37,13 +38,21 @@ public class RatingMatrix {
      * @param itemid Item Id
      * @return Rating if exist or null otherwise
      */
-    public Float get(int userid, int itemid) {
-        if (!matrix.containsKey(userid)) {
+    public Double get(int userid, int itemid) {
+        if (!matrix.containsKey(itemid)) {
             return null;
-        }else if(!matrix.get(userid).containsKey(itemid)){
+        }else if(!matrix.get(itemid).containsKey(userid)){
             return null;
         }else{
-            return matrix.get(userid).get(itemid);           
+            return matrix.get(itemid).get(userid);           
+        }
+    }
+    
+    public HashMap<Integer, Double> get(int itemid){
+        if (matrix.containsKey(itemid)) {
+            return matrix.get(itemid);
+        }else{
+            return null;
         }
     }
     
@@ -53,10 +62,10 @@ public class RatingMatrix {
      * @param itemid Item Id
      */
     public void unset(int userid, int itemid){
-        if (matrix.containsKey(userid) && matrix.get(userid).containsKey(itemid)) {
-            matrix.get(userid).remove(itemid);
-            if(matrix.get(userid).size()==0){
-                matrix.remove(userid);
+        if (matrix.containsKey(itemid) && matrix.get(itemid).containsKey(userid)) {
+            matrix.get(itemid).remove(userid);
+            if(matrix.get(itemid).isEmpty()){
+                matrix.remove(itemid);
             }
         }
     }

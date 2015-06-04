@@ -20,49 +20,59 @@ public class Recommender {
 
     /**
      * Calculates similarity of two users
+     *
      * @param user1 User 1
      * @param user2 User 2
-     * @return Similarity using Pearson coefficient
+     * @return Similarity using Pearson's coefficient
      */
-    public static Float Similarity(User user1, User user2) {
-        HashMap<Integer, Rating> ratingsUser1 = RatingDAO.getRatingsOfUser(user1.getIduser());
-        HashMap<Integer, Rating> ratingsUser2 = RatingDAO.getRatingsOfUser(user2.getIduser());
+    public static Double Similarity(User user1, User user2) {
 
-        float avgUser1 = Recommender.avgRatings(ratingsUser1);
-        float avgUser2 = Recommender.avgRatings(ratingsUser2);
-        float dividend = 0f;
-        float divisorSub1 = 0f;
-        float divisorSub2 = 0f;
-        
-        for (Entry<Integer, Rating> entry1 : ratingsUser1.entrySet()) {
-            if (ratingsUser2.containsKey(entry1.getKey())) {
-                float valUser1 = entry1.getValue().getRating() - avgUser1;
-                float valUser2 = ratingsUser2.get(entry1.getKey()).getRating() - avgUser2;
-                dividend += (valUser1 * valUser2);
-                divisorSub1 += (valUser1 * valUser1);
-                divisorSub2 += (valUser2 * valUser2);
+        int user1Id = user1.getIduser();
+        int user2Id = user2.getIduser();
+
+        HashMap<Integer, Rating> ratingsUser1 = RatingDAO.getRatingsOfUser(user1Id);
+        HashMap<Integer, Rating> ratingsUser2 = RatingDAO.getRatingsOfUser(user2Id);
+
+        double avgUser1 = RatingDAO.avgRatings(user1Id);
+        double avgUser2 = RatingDAO.avgRatings(user2Id);
+
+        double dividend = 0f;
+        double divisorSub1 = 0f;
+        double divisorSub2 = 0f;
+
+        for (Entry<Integer, Rating> entryRating1 : ratingsUser1.entrySet()) {
+            if (ratingsUser2.containsKey(entryRating1.getKey())) {
+                Rating rating1 = entryRating1.getValue();
+                Rating rating2 = ratingsUser2.get(entryRating1.getKey());
+
+                double verde = rating1.getRating() - avgUser1;
+                double naranja = rating2.getRating() - avgUser2;
+
+                dividend += verde * naranja;
+                divisorSub1 += verde * verde;
+                divisorSub2 += naranja * naranja;
             }
         }
-        
-        float divisor = (float)(sqrt(divisorSub1*divisorSub2));
-        
-        return dividend / divisor;
+        return dividend / (sqrt(divisorSub1) * sqrt(divisorSub2));
     }
-    
+
     /**
      * Return the K nearest neighbors
+     *
      * @param activeUser Active user
      * @param K Size of neighbours
-     * @return HashMap<Id, User> with the K Nearest Neighbours to the active User
+     * @return HashMap<Similarity, User> with the K Nearest Neighbours to the
+     * active User
      */
-    public static HashMap<Integer, User> KNN(User activeUser, int K){
-        Map<Float, User> similarUsersMap = new TreeMap(Collections.reverseOrder());
-        
+    public static HashMap<Double, User> KNN(User activeUser, int K) {
+        Map<Double, User> similarUsersMap = new TreeMap(Collections.reverseOrder());
+
+        double similarity;
         int activeUserId = activeUser.getIduser();
 
         for (User currentUser : UserDAO.getList().values()) {
             if (!currentUser.getIduser().equals(activeUserId)) {
-                float similarity = Recommender.Similarity(activeUser, currentUser);
+                similarity = Recommender.Similarity(activeUser, currentUser);
                 if (similarity > 0) {
                     similarUsersMap.put(similarity, currentUser);
                 }
@@ -70,27 +80,27 @@ public class Recommender {
         }
 
         //System.out.println(usuariosSimilares.size());
-        HashMap<Integer, User> neighbor = new HashMap();
+        HashMap<Double, User> neighbor = new HashMap();
 
         int i = 0;
-        for (Float key : similarUsersMap.keySet()) {
-            neighbor.put(similarUsersMap.get(key).getIduser(), similarUsersMap.get(key));
+        for (Double key : similarUsersMap.keySet()) {
+            neighbor.put(key, similarUsersMap.get(key));
             ++i;
             if (i == K) {
                 break;
             }
         }
-        
         return neighbor;
     }
 
     /**
-     * Calculate average of ratings 
+     * Calculate average of ratings
+     *
      * @param ratingsMap HashMap<Integer, Rating> with ratings
      * @return Average of ratings
      */
-    private static Float avgRatings(HashMap<Integer, Rating> ratingsMap) {
-        Float avg = 0f;
+    private static Double avgRatings(HashMap<Integer, Rating> ratingsMap) {
+        double avg = 0f;
         int count = 0;
         for (Entry<Integer, Rating> entry : ratingsMap.entrySet()) {
             ++count;
@@ -98,5 +108,4 @@ public class Recommender {
         }
         return avg / count;
     }
-
 }

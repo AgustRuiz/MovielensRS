@@ -17,7 +17,7 @@ public class Rating {
     private Integer iditem = null;
     
     /// Rating [1,5]
-    private Float rating = null;
+    private Double rating = null;
     
     /// Timestamp
     private Timestamp timestamp = null;
@@ -55,11 +55,11 @@ public class Rating {
         this.iditem = iditem;
     }
 
-    public Float getRating() {
+    public Double getRating() {
         return rating;
     }
 
-    public void setRating(Float rating) {
+    public void setRating(Double rating) {
         this.rating = rating;
     }
 
@@ -77,7 +77,7 @@ public class Rating {
     private void InitializeVariables() {
         this.iduser = -1;
         this.iditem = -1;
-        this.rating = 0f;
+        this.rating = 0.0;
         this.timestamp = new Timestamp(0);
     }
     
