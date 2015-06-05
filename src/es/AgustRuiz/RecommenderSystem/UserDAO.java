@@ -14,6 +14,7 @@ public class UserDAO {
 
     /**
      * Gets the list of Items from database
+     *
      * @return HashMap<id, user> of Items from database
      */
     public static HashMap<Integer, User> getList() {
@@ -35,6 +36,7 @@ public class UserDAO {
 
     /**
      * Gets an Item from database
+     *
      * @param iduser Item Id fo filter
      * @return The first item found with iditem or null otherwise
      */
@@ -53,12 +55,13 @@ public class UserDAO {
         }
         return user;
     }
-    
+
     /**
      * Counts numbers of Users
+     *
      * @return Numbers of Users
      */
-    public static Integer count(){
+    public static Integer count() {
         Integer size = -1;
         try {
             PreparedStatement query = DbConnection.getConnection().prepareStatement("SELECT COUNT(*) FROM users");
@@ -73,12 +76,13 @@ public class UserDAO {
         }
         return size;
     }
-    
+
     /**
      * Fills an User from a ResultSet
+     *
      * @param rs ResultSet
      * @return User filled from rs
-     * @throws SQLException 
+     * @throws SQLException
      */
     private static User fillUser(ResultSet rs) throws SQLException {
         User user = new User();
@@ -88,8 +92,25 @@ public class UserDAO {
         user.setGender(rs.getString("gender").charAt(0));
         user.setOccupation(rs.getString("occupation"));
         user.setZipcode(rs.getString("zipcode"));
-        
+
         return user;
     }
-    
+
+    public static Boolean existIduser(int iduser) {
+
+        Integer size = 0;
+        try {
+            PreparedStatement query = DbConnection.getConnection().prepareStatement("SELECT COUNT(*) FROM users WHERE iduser=" + iduser);
+            ResultSet rs = query.executeQuery();
+            if (rs.next()) {
+                size = rs.getInt(1);
+            }
+            rs.close();
+            query.close();
+        } catch (Exception e) {
+            System.err.println("Can't get size of Users table from database. " + e);
+        }
+        return (size > 0);
+    }
+
 }

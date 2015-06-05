@@ -191,4 +191,17 @@ public class Recommender {
         }
         return avg / count;
     }
+    
+    public static void Run(){
+        
+        User activeUser = UserDAO.get(Main.ACTIVE_USER);
+
+        Main.recommendations = Recommender.makeRecomendations(activeUser, Main.K_VALUE);
+        
+        System.out.println("RESULTS:");
+        for (Entry<Item, Double> entry : Main.recommendations.entrySet()) {
+            System.out.println("idItem:\t" + entry.getKey().getIditem() + "\t->\t" + entry.getValue());
+        }
+        System.out.println("Num of recommendations: " + Main.recommendations.size());
+    }
 }
