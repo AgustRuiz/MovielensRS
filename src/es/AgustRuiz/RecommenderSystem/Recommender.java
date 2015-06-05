@@ -87,7 +87,7 @@ public class Recommender {
                 if (similarity > 0) {
                     similarUsersMap.put(similarity, currentUser);
                 }
-                System.err.println("Similarity with " + currentUser.getIduser() + "\t: " + similarity);
+                //System.err.println("Similarity with " + currentUser.getIduser() + "\t: " + similarity);
             }
         }
 
