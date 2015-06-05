@@ -14,16 +14,15 @@ import java.util.logging.Logger;
 
 /**
  * Graphic User Interface
+ *
  * @author Agustin Ruiz Linares <arl00029@red.ujaen.es>
  */
 public class GUI {
-    /// Scanner
-    private static Scanner keyboard = new Scanner(System.in);
-    
+
     /**
      * Main Menu
      */
-    public static void MainMenu(){
+    public static void MainMenu() {
         List<Integer> validOptions = new ArrayList();
         validOptions.add(1);
         validOptions.add(2);
@@ -39,19 +38,18 @@ public class GUI {
             System.out.println("");
             System.out.println("[1] Practice 1 - Collaborative Recommendation System.");
             System.out.println("[2] Practice 2 - Evaluation.");
-            System.out.println("[3] Practice 3 - Check database connection.");
+            System.out.println("[3] Check database connection.");
             System.out.println("[0] Exit.");
             System.out.println("");
             System.out.print("Option: ");
-            selectedOption = keyboard.nextInt();
+            selectedOption = GUI.getIntegerFromKeyboard();
             switch (selectedOption) {
                 case 1:
                     GUI.MainMenu_Practice01();
                     break;
                 case 2:
                     //GUI.MainMenu_Practice02();
-                    System.err.println("Not implemented yet");
-                    GUI.pauseProg();
+                    GUI.MainMenu_Practice02();
                     break;
                 case 3:
                     GUI.DatabaseConnection();
@@ -61,87 +59,22 @@ public class GUI {
     }
 
     /**
-     * Practice 1 - Main menu 
+     * Reads an integer from keyboard before pressing enter key
+     * @return Number introduced by keyboard, or Integer.MIN_VALUE if not valid
      */
-    private static void MainMenu_Practice01() {
-        List<Integer> validOptions = new ArrayList();
-        validOptions.add(1);
-        validOptions.add(2);
-        validOptions.add(0);
-        int selectedOption = -1;
-        while (selectedOption != 0) {
-            System.out.println("");
-            System.out.println("+-------------------------------------------------+");
-            System.out.println("| PRACTICE 1: COLLABORATIVE RECOMMENDATION SYSTEM |");
-            System.out.println("+-------------------------------------------------+");
-            System.out.println("Please, select an option:");
-            System.out.println("");
-            System.out.println("[1] Select UserId. (Current: " + Recommender.getActiveUserId() + ").");
-            System.out.println("[2] Select K value. (Current: " + Recommender.getKvalue() + ").");
-            System.out.println("[3] Run recommender for current user.");
-            System.out.println("[0] Back.");
-            System.out.println("");
-            System.out.print("Option: ");
-            selectedOption = keyboard.nextInt();
-            switch (selectedOption) {
-                case 1:
-                    GUI.changeActiveUser();
-                    break;
-                case 2:
-                    GUI.changeKValue();
-                    break;
-                case 3:
-                    System.out.println("");
-                    System.out.println("+-----------------+");
-                    System.out.println("| RECOMMENDATIONS |");
-                    System.out.println("+-----------------+");
-                    System.out.println("");
-                    Recommender.Run();
-                    System.out.println("");
-                    GUI.pauseProg();
-                    break;
-            }
+    private static int getIntegerFromKeyboard() {
+        Scanner keyboard = new Scanner(System.in);
+        try {
+            return keyboard.nextInt();
+        } catch (Exception e) {
+            return Integer.MIN_VALUE;
         }
     }
 
-    /**
-     * Change active user
-     */
-    private final static void changeActiveUser() {
-        System.out.println("");
-        System.out.println("+----------------+");
-        System.out.println("| CHANGE USER ID |");
-        System.out.println("+----------------+");
-        System.out.println("");
-        System.out.print("Enter active user id: ");
-
-        int userSelected = keyboard.nextInt();
-        if (UserDAO.existIduser(userSelected)) {
-            Recommender.setActiveUserId(userSelected);
-        }
-    }
-
-    /**
-     * Change K value (for KNN)
-     */
-    private final static void changeKValue() {
-        System.out.println("");
-        System.out.println("+----------------------+");
-        System.out.println("| CHANGE K VALUE (KNN) |");
-        System.out.println("+----------------------+");
-        System.out.println("");
-        System.out.print("Enter K value: ");
-
-        int kvalue = keyboard.nextInt();
-        if (kvalue > 0 && kvalue <= UserDAO.count()) {
-            Recommender.setKvalue(kvalue);
-        }
-    }
-    
     /**
      * Show database connection data
      */
-    private static void DatabaseConnection(){
+    private static void DatabaseConnection() {
         System.out.println("");
         System.out.println("+--------------------------+");
         System.out.println("| DATABASE CONNECTION DATA |");
@@ -162,5 +95,144 @@ public class GUI {
         System.out.print("Press enter to continue... ");
         Scanner keyboard = new Scanner(System.in);
         keyboard.nextLine();
+    }
+
+    /**
+     * Practice 1 - Main menu
+     */
+    private static void MainMenu_Practice01() {
+        List<Integer> validOptions = new ArrayList();
+        validOptions.add(1);
+        validOptions.add(2);
+        validOptions.add(0);
+        int selectedOption = -1;
+        while (selectedOption != 0) {
+            System.out.println("");
+            System.out.println("+-------------------------------------------------+");
+            System.out.println("| PRACTICE 1: COLLABORATIVE RECOMMENDATION SYSTEM |");
+            System.out.println("+-------------------------------------------------+");
+            System.out.println("Please, select an option:");
+            System.out.println("");
+            System.out.println("[1] Select UserId. (Current: " + Recommender.getActiveUserId() + ").");
+            System.out.println("[2] Select K value. (Current: " + Recommender.getKvalue() + ").");
+            System.out.println("[3] Run recommender for current user.");
+            System.out.println("[0] Back.");
+            System.out.println("");
+            System.out.print("Option: ");
+            selectedOption = GUI.getIntegerFromKeyboard();
+            switch (selectedOption) {
+                case 1:
+                    GUI.changeActiveUser_Practice01();
+                    break;
+                case 2:
+                    GUI.changeKValue_Practice01();
+                    break;
+                case 3:
+                    System.out.println("");
+                    System.out.println("+-----------------+");
+                    System.out.println("| RECOMMENDATIONS |");
+                    System.out.println("+-----------------+");
+                    System.out.println("");
+                    Recommender.Run();
+                    System.out.println("");
+                    GUI.pauseProg();
+                    break;
+            }
+        }
+    }
+
+    /**
+     * Change active user
+     */
+    private final static void changeActiveUser_Practice01() {
+        System.out.println("");
+        System.out.println("+----------------+");
+        System.out.println("| CHANGE USER ID |");
+        System.out.println("+----------------+");
+        System.out.println("");
+        System.out.print("Enter active user id: ");
+
+        int userSelected = GUI.getIntegerFromKeyboard();
+        if (UserDAO.existIduser(userSelected)) {
+            Recommender.setActiveUserId(userSelected);
+        }
+    }
+
+    /**
+     * Change K value (for KNN)
+     */
+    private final static void changeKValue_Practice01() {
+        System.out.println("");
+        System.out.println("+----------------------+");
+        System.out.println("| CHANGE K VALUE (KNN) |");
+        System.out.println("+----------------------+");
+        System.out.println("");
+        System.out.print("Enter K value: ");
+
+        int kvalue = GUI.getIntegerFromKeyboard();
+        if (kvalue > 0 && kvalue <= UserDAO.count()) {
+            Recommender.setKvalue(kvalue);
+        }
+    }
+
+    /**
+     * Practice 1 - Main menu
+     */
+    private static void MainMenu_Practice02() {
+        int selectedOption = -1;
+        while (selectedOption != 0) {
+            System.out.println("");
+            System.out.println("+------------------------+");
+            System.out.println("| PRACTICE 2: EVALUATION |");
+            System.out.println("+------------------------+");
+            System.out.println("Please, select an option:");
+            System.out.println("");
+            System.out.println("[1] Select UserId. Current: " + Recommender_Evaluator.getActiveUserId() + ".");
+            System.out.println("[2] Add K value. Current: " + Recommender_Evaluator.getKValuesInString() + ".");
+            System.out.println("[3] Reset K values.");
+            System.out.println("[0] Back.");
+            System.out.println("");
+            System.out.print("Option: ");
+            selectedOption = GUI.getIntegerFromKeyboard();
+            switch (selectedOption) {
+                case 1:
+                    GUI.changeActiveUser_Practice02();
+                    break;
+                case 2:
+                    GUI.addKValue_Practice02();
+                    break;
+                case 3:
+                    Recommender_Evaluator.resetKValue();
+                    break;
+            }
+        }
+    }
+
+    /**
+     * Change K value (for KNN)
+     */
+    private final static void addKValue_Practice02() {
+        System.out.print("Enter K value: ");
+        int kvalue = GUI.getIntegerFromKeyboard();
+        if (kvalue > 0 && kvalue <= UserDAO.count()) {
+            Recommender_Evaluator.addKValue(kvalue);
+        }
+    }
+
+    /**
+     * Change active user
+     */
+    private final static void changeActiveUser_Practice02() {
+        System.out.println("");
+        System.out.println("+----------------+");
+        System.out.println("| CHANGE USER ID |");
+        System.out.println("+----------------+");
+        System.out.println("");
+        System.out.print("Enter active user id: ");
+
+        int userSelected = GUI.getIntegerFromKeyboard();
+        if (UserDAO.existIduser(userSelected)) {
+            Recommender_Evaluator.setActiveUserId(userSelected);
+        }
     }
 }
