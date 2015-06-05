@@ -39,7 +39,7 @@ public class GUI {
             System.out.println("[1] Select UserId. (Current: " + Main.ACTIVE_USER + ").");
             System.out.println("[2] Select K value. (Current: " + Main.K_VALUE + ").");
             System.out.println("[3] Run recommender for current user.");
-            System.out.println("[0] Salir.");
+            System.out.println("[0] Quit.");
             System.out.println("");
             System.out.print("Option: ");
 
@@ -95,7 +95,7 @@ public class GUI {
     }
 
     public static void pauseProg() {
-        System.out.println("Press enter to continue... ");
+        System.out.print("Press enter to continue... ");
         Scanner keyboard = new Scanner(System.in);
         keyboard.nextLine();
     }

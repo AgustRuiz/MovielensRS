@@ -3,8 +3,6 @@ package es.AgustRuiz.RecommenderSystem;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Connection to database
@@ -14,19 +12,22 @@ import java.util.logging.Logger;
 public class DbConnection {
 
     /// Database name
-    private static String db = "ml-100k-mysql";
+    private static String db;
 
     /// Username
-    private final static String username = "root";
+    private static String username;
 
     /// Password
-    private final static String password = "";
+    private static String password;
 
     /// Connection URL
-    private final static String url = "jdbc:mysql://localhost:3306/" + db + "?zeroDateTimeBehavior=convertToNull";
+    private static String url;
 
     /// Connection
     private static Connection connection = null;
+
+    /// XMLHandler
+    private static XMLHandler configXML;
 
     /**
      * Constructor
@@ -40,7 +41,14 @@ public class DbConnection {
      * @return Connection to database
      */
     public static Connection getConnection() {
-        if (connection == null ) {
+        if (connection == null) {
+            DbConnection.configXML = new XMLHandler(("./DbConnection.xml"));
+            if (configXML.isOK()) {
+                DbConnection.db = DbConnection.configXML.getNode("DataBase");
+                DbConnection.username = DbConnection.configXML.getNode("UserName");
+                DbConnection.password = DbConnection.configXML.getNode("Password");
+                DbConnection.url = DbConnection.configXML.getNode("UrlConnection");
+            }
             try {
                 Class.forName("com.mysql.jdbc.Driver");
                 connection = DriverManager.getConnection(url, username, password);

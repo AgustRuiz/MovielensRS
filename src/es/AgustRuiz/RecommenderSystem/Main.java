@@ -19,31 +19,20 @@ import java.util.TreeMap;
  */
 public class Main {
 
+    /// K value (for KNN)
     public static int K_VALUE = 20;
+    
+    /// Active user id
     public static int ACTIVE_USER = 23;
+    
+    /// Recommendations
     public static HashMap<Item, Double> recommendations;
 
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        
         GUI.MainMenu();
-        
-        
-        /*
-        User activeUser = UserDAO.get(ACTIVE_USER);
-
-        HashMap<Item, Double> recommendations = Recommender.makeRecomendations(activeUser, K_VALUE);
-        
-        System.out.println("RESULTS:");
-        for (Entry<Item, Double> entry : recommendations.entrySet()) {
-            System.out.println("idItem:\t" + entry.getKey().getIditem() + "\t->\t" + entry.getValue());
-        }
-        System.out.println("Num of recommendations: " + recommendations.size());
-        
-        /**/
-
     }
 
 }
