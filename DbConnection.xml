@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<DbConnection>
+	<DataBase>ml-100k-mysql</DataBase>
+	<UserName>root</UserName>
+	<Password></Password>
+	<UrlConnection>jdbc:mysql://localhost:3306/ml-100k-mysql?zeroDateTimeBehavior=convertToNull</UrlConnection>
+</DbConnection>
