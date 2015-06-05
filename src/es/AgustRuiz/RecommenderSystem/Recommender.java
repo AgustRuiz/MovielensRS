@@ -15,9 +15,19 @@ import java.util.TreeMap;
 
 /**
  * Recommender
+ *
  * @author Agustin Ruiz Linares <arl00029@red.ujaen.es>
  */
 public class Recommender {
+
+    /// K value (for KNN)
+    private static int K_VALUE = 20;
+
+    /// Active user id
+    private static int ACTIVE_USER_ID = 23;
+
+    /// Recommendations
+    private static HashMap<Item, Double> RECOMMENDATIONS = null;
 
     /**
      * Calculates similarity of two users
@@ -77,6 +87,7 @@ public class Recommender {
                 if (similarity > 0) {
                     similarUsersMap.put(similarity, currentUser);
                 }
+                System.err.println("Similarity with " + currentUser.getIduser() + "\t: " + similarity);
             }
         }
 
@@ -85,6 +96,7 @@ public class Recommender {
 
         int i = 0;
         for (Double key : similarUsersMap.keySet()) {
+            //System.err.println("Similarity with " + similarUsersMap.get(key).getIduser() + "\t: " + key);
             neighbor.put(key, similarUsersMap.get(key));
             ++i;
             if (i == K) {
@@ -93,11 +105,11 @@ public class Recommender {
         }
         return neighbor;
     }
-    
-    public static HashMap<Item, Double> makeRecomendations(User activeUser, int neigborhoodSize){
+
+    public static HashMap<Item, Double> makeRecomendations(User activeUser, int neigborhoodSize) {
         long time;
         int activeUserId = activeUser.getIduser();
-        
+
         /* * * NEIGHBORHOOD * * */
         System.out.println("Building neighbourhood...");
         time = System.currentTimeMillis();
@@ -108,7 +120,7 @@ public class Recommender {
             int iduser = user.getIduser();
             avgRatingsUsers.put(iduser, RatingDAO.avgRatings(iduser));
         }
-        
+
         System.out.println("Neighbourhood builded in " + (System.currentTimeMillis() - time) + " ms!\n");
         /* * * /NEIGHBORHOOD * * */
 
@@ -172,7 +184,7 @@ public class Recommender {
 
         System.out.println("Finished in " + (System.currentTimeMillis() - time) + " ms!\n");
         /* * * /RECOMMENDATIONS * * */
-        
+
         return recommendations;
     }
 
@@ -191,17 +203,65 @@ public class Recommender {
         }
         return avg / count;
     }
-    
-    public static void Run(){
-        
-        User activeUser = UserDAO.get(Main.ACTIVE_USER);
 
-        Main.recommendations = Recommender.makeRecomendations(activeUser, Main.K_VALUE);
-        
+    /**
+     * Run recommender
+     */
+    public static void Run() {
+
+        User activeUser = UserDAO.get(Recommender.ACTIVE_USER_ID);
+
+        Recommender.RECOMMENDATIONS = Recommender.makeRecomendations(activeUser, Recommender.K_VALUE);
+
         System.out.println("RESULTS:");
-        for (Entry<Item, Double> entry : Main.recommendations.entrySet()) {
+        for (Entry<Item, Double> entry : Recommender.RECOMMENDATIONS.entrySet()) {
             System.out.println("idItem:\t" + entry.getKey().getIditem() + "\t->\t" + entry.getValue());
         }
-        System.out.println("Num of recommendations: " + Main.recommendations.size());
+        System.out.println("Num of recommendations: " + Recommender.RECOMMENDATIONS.size());
+    }
+
+    /**
+     * Get K value (for KNN)
+     *
+     * @return K value (for KNN)
+     */
+    public static int getKvalue() {
+        return Recommender.K_VALUE;
+    }
+
+    /**
+     * Set K value (for KNN)
+     *
+     * @param kValue K value (for KNN)
+     */
+    public static void setKvalue(int kValue) {
+        Recommender.K_VALUE = kValue;
+    }
+
+    /**
+     * Get active user id
+     *
+     * @return User id
+     */
+    public static int getActiveUserId() {
+        return Recommender.ACTIVE_USER_ID;
+    }
+
+    /**
+     * Set active user id
+     *
+     * @param iduser User id
+     */
+    public static void setActiveUserId(int iduser) {
+        Recommender.ACTIVE_USER_ID = iduser;
+    }
+
+    /**
+     * Get recommendations
+     *
+     * @return Calculated recommendations
+     */
+    public static HashMap<Item, Double> getRecommendations() {
+        return Recommender.RECOMMENDATIONS;
     }
 }

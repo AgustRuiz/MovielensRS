@@ -19,15 +19,6 @@ import java.util.TreeMap;
  */
 public class Main {
 
-    /// K value (for KNN)
-    public static int K_VALUE = 20;
-    
-    /// Active user id
-    public static int ACTIVE_USER = 23;
-    
-    /// Recommendations
-    public static HashMap<Item, Double> recommendations;
-
     /**
      * @param args the command line arguments
      */

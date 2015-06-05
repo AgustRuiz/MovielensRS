@@ -6,6 +6,7 @@ import java.sql.SQLException;
 
 /**
  * Connection to database
+ *
  * @author Agustin Ruiz Linares <arl00029@red.ujaen.es>
  */
 public class DbConnection {
@@ -31,8 +32,7 @@ public class DbConnection {
     /**
      * Constructor
      */
-    private DbConnection() {
-    }
+    private DbConnection() {}
 
     /**
      * Gets connection
@@ -40,6 +40,54 @@ public class DbConnection {
      * @return Connection to database
      */
     public static Connection getConnection() {
+        DbConnection.Connect();
+        return connection;
+    }
+
+    /**
+     * Get database name
+     *
+     * @return Database name
+     */
+    public static String getDb() {
+        DbConnection.Connect();
+        return DbConnection.db;
+    }
+
+    /**
+     * Get connection username
+     *
+     * @return Username
+     */
+    public static String getUsername() {
+        DbConnection.Connect();
+        return DbConnection.username;
+    }
+
+    /**
+     * Get connection password
+     *
+     * @return Password
+     */
+    public static String getPassword() {
+        DbConnection.Connect();
+        return DbConnection.password;
+    }
+
+    /**
+     * Get URL connection
+     *
+     * @return URL connection
+     */
+    public static String getUrlConnection() {
+        DbConnection.Connect();
+        return DbConnection.url;
+    }
+
+    /**
+     * Set connection
+     */
+    private static void Connect() {
         if (connection == null) {
             DbConnection.configXML = new XMLHandler(("./DbConnection.xml"));
             if (configXML.isOK()) {
@@ -62,13 +110,12 @@ public class DbConnection {
                 System.err.println(e);
             }
         }
-        return connection;
     }
 
     /**
      * Disconnects from database
      */
-    private void Disconnect() {
+    private static void Disconnect() {
         try {
             connection.close();
         } catch (SQLException e) {
@@ -76,5 +123,4 @@ public class DbConnection {
         }
         connection = null;
     }
-
 }
