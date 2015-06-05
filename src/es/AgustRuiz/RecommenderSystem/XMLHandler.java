@@ -13,7 +13,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import org.w3c.dom.Element;
 
 /**
- *
+ * XML Handler
  * @author Agustin Ruiz Linares <arl00029@red.ujaen.es>
  */
 public class XMLHandler {

@@ -6,7 +6,6 @@ import java.sql.SQLException;
 
 /**
  * Connection to database
- *
  * @author Agustin Ruiz Linares <arl00029@red.ujaen.es>
  */
 public class DbConnection {

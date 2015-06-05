@@ -7,7 +7,7 @@ import java.sql.SQLException;
 import java.util.HashMap;
 
 /**
- *
+ * User DAO
  * @author Agustin Ruiz Linares <arl00029@red.ujaen.es>
  */
 public class UserDAO {

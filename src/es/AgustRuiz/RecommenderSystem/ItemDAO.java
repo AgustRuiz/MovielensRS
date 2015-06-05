@@ -8,7 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 
 /**
- *
+ * Item DAO
  * @author Agustin Ruiz Linares <arl00029@red.ujaen.es>
  */
 public class ItemDAO {

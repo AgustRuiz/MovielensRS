@@ -3,8 +3,7 @@ package es.AgustRuiz.RecommenderSystem;
 import java.util.HashMap;
 
 /**
- * Rating matrix
- *
+ * Rating matrix class
  * @author Agustin Ruiz Linares <arl00029@red.ujaen.es>
  */
 public class RatingMatrix {

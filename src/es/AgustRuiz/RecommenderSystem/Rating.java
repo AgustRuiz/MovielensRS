@@ -3,7 +3,7 @@ package es.AgustRuiz.RecommenderSystem;
 import java.sql.Timestamp;
 
 /**
- *
+ * Rating class
  * @author Agustin Ruiz Linares <arl00029@red.ujaen.es>
  */
 public class Rating {

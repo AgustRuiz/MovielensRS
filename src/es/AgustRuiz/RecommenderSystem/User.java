@@ -4,7 +4,6 @@ import java.sql.Struct;
 
 /**
  * User class
- *
  * @author Agustin Ruiz Linares <arl00029@red.ujaen.es>
  */
 public class User {

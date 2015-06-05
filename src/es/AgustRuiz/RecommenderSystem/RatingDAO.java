@@ -15,7 +15,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- *
+ * Rating DAO
  * @author Agustin Ruiz Linares <arl00029@red.ujaen.es>
  */
 public class RatingDAO {

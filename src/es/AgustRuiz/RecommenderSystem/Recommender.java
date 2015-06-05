@@ -14,7 +14,7 @@ import java.util.Map.Entry;
 import java.util.TreeMap;
 
 /**
- *
+ * Recommender
  * @author Agustin Ruiz Linares <arl00029@red.ujaen.es>
  */
 public class Recommender {
