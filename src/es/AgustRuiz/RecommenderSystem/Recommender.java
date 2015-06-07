@@ -106,12 +106,12 @@ public class Recommender {
         return neighbor;
     }
 
-    public static HashMap<Item, Double> makeRecomendations(User activeUser, int neigborhoodSize) {
+    public static HashMap<Item, Double> makeRecommendations(User activeUser, int neigborhoodSize) {
         long time;
         int activeUserId = activeUser.getIduser();
 
         /* * * NEIGHBORHOOD * * */
-        System.out.println("Building neighbourhood...");
+        System.out.print("Building neighbourhood... ");
         time = System.currentTimeMillis();
 
         HashMap<Double, User> neighborhoodSimilarityUser = Recommender.KNN(activeUser, neigborhoodSize);
@@ -125,7 +125,7 @@ public class Recommender {
         /* * * /NEIGHBORHOOD * * */
 
         /* * * RATINGS ACTIVE USER * * */
-        System.out.println("Getting ratings for active user...");
+        System.out.print("Getting ratings for active user... ");
         time = System.currentTimeMillis();
 
         HashMap<Integer, Rating> ratingsActiveUser = RatingDAO.getRatingsOfUser(activeUserId);
@@ -135,7 +135,7 @@ public class Recommender {
         /* * * /RATINGS ACTIVE USER * * */
 
         /* * * RATING MATRIX * * */
-        System.out.println("Calculating similarity and rating matrix...");
+        System.out.print("Calculating similarity and rating matrix... ");
         time = System.currentTimeMillis();
 
         HashMap<Integer, Double> similarityMap = new HashMap(); // HashMap<ItemId, Similarity>
@@ -152,7 +152,7 @@ public class Recommender {
         /* * * /RATING MATRIX * * */
 
         /* * * RECOMMENDATIONS * * */
-        System.out.println("Calculating recommendations...");
+        System.out.print("Calculating recommendations... ");
         time = System.currentTimeMillis();
 
         HashMap<Item, Double> recommendations = new HashMap();
@@ -209,15 +209,18 @@ public class Recommender {
      */
     public static void Run() {
 
+        long time = System.currentTimeMillis();
+        
         User activeUser = UserDAO.get(Recommender.ACTIVE_USER_ID);
-
-        Recommender.RECOMMENDATIONS = Recommender.makeRecomendations(activeUser, Recommender.K_VALUE);
+        Recommender.RECOMMENDATIONS = Recommender.makeRecommendations(activeUser, Recommender.K_VALUE);
 
         System.out.println("RESULTS:");
         for (Entry<Item, Double> entry : Recommender.RECOMMENDATIONS.entrySet()) {
             System.out.println("idItem:\t" + entry.getKey().getIditem() + "\t->\t" + entry.getValue());
         }
         System.out.println("Num of recommendations: " + Recommender.RECOMMENDATIONS.size());
+        
+        System.out.println("\nEverything finished in " + (System.currentTimeMillis() - time) + " ms!\n");
     }
 
     /**

@@ -190,6 +190,7 @@ public class GUI {
             System.out.println("[1] Select UserId. Current: " + Recommender_Evaluator.getActiveUserId() + ".");
             System.out.println("[2] Add K value. Current: " + Recommender_Evaluator.getKValuesInString() + ".");
             System.out.println("[3] Reset K values.");
+            System.out.println("[4] Run evaluator.");
             System.out.println("[0] Back.");
             System.out.println("");
             System.out.print("Option: ");
@@ -204,6 +205,14 @@ public class GUI {
                 case 3:
                     Recommender_Evaluator.resetKValue();
                     break;
+                case 4:
+                    System.out.println("");
+                    System.out.println("+-----------+");
+                    System.out.println("| EVALUATOR |");
+                    System.out.println("+-----------+");
+                    Recommender_Evaluator.Run();
+                    GUI.pauseProg();
+                    break;
             }
         }
     }
@@ -214,7 +223,7 @@ public class GUI {
     private final static void addKValue_Practice02() {
         System.out.print("Enter K value: ");
         int kvalue = GUI.getIntegerFromKeyboard();
-        if (kvalue > 0 && kvalue <= UserDAO.count()) {
+        if (kvalue > 0 && kvalue <= UserDAO.count() && !Recommender_Evaluator.hasKValue(kvalue)) {
             Recommender_Evaluator.addKValue(kvalue);
         }
     }
