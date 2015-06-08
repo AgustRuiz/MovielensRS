@@ -221,11 +221,14 @@ public class GUI {
      * Change K value (for KNN)
      */
     private final static void addKValue_Practice02() {
-        System.out.print("Enter K value: ");
-        int kvalue = GUI.getIntegerFromKeyboard();
+        int kvalue;
+        do{
+        System.out.print("Enter K value (0 to exit): ");
+        kvalue = GUI.getIntegerFromKeyboard();
         if (kvalue > 0 && kvalue <= UserDAO.count() && !Recommender_Evaluator.hasKValue(kvalue)) {
             Recommender_Evaluator.addKValue(kvalue);
         }
+        }while(kvalue > 0);
     }
 
     /**

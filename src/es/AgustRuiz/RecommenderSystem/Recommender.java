@@ -27,7 +27,7 @@ public class Recommender {
     private static int ACTIVE_USER_ID = 23;
 
     /// Recommendations
-    private static HashMap<Item, Double> RECOMMENDATIONS = null;
+    private static Map<Double, Item> RECOMMENDATIONS = null;
 
     /**
      * Calculates similarity of two users
@@ -106,7 +106,7 @@ public class Recommender {
         return neighbor;
     }
 
-    public static HashMap<Item, Double> makeRecommendations(User activeUser, int neigborhoodSize) {
+    public static Map<Double, Item> makeRecommendations(User activeUser, int neigborhoodSize) {
         long time;
         int activeUserId = activeUser.getIduser();
 
@@ -155,7 +155,7 @@ public class Recommender {
         System.out.print("Calculating recommendations... ");
         time = System.currentTimeMillis();
 
-        HashMap<Item, Double> recommendations = new HashMap();
+        Map<Double, Item> recommendations = new TreeMap(Collections.reverseOrder());
         HashMap<Integer, Item> itemHashMap = ItemDAO.getList();
 
         for (Item currentItem : itemHashMap.values()) {
@@ -176,7 +176,7 @@ public class Recommender {
                 }
                 if (divisor != 0) {
                     double predictedRating = avgRatingsActiveUser + (dividend / divisor);
-                    recommendations.put(currentItem, predictedRating);
+                    recommendations.put(predictedRating, currentItem);
                 }
 
             }
@@ -215,8 +215,8 @@ public class Recommender {
         Recommender.RECOMMENDATIONS = Recommender.makeRecommendations(activeUser, Recommender.K_VALUE);
 
         System.out.println("RESULTS:");
-        for (Entry<Item, Double> entry : Recommender.RECOMMENDATIONS.entrySet()) {
-            System.out.println("idItem:\t" + entry.getKey().getIditem() + "\t->\t" + entry.getValue());
+        for (Entry<Double, Item> entry : Recommender.RECOMMENDATIONS.entrySet()) {
+            System.out.println("idItem:\t" + entry.getValue().getIditem() + "\t->\t" + entry.getKey());
         }
         System.out.println("Num of recommendations: " + Recommender.RECOMMENDATIONS.size());
         
@@ -264,7 +264,7 @@ public class Recommender {
      *
      * @return Calculated recommendations
      */
-    public static HashMap<Item, Double> getRecommendations() {
+    public static Map<Double, Item> getRecommendations() {
         return Recommender.RECOMMENDATIONS;
     }
 }

@@ -166,7 +166,6 @@ public class Recommender_Evaluator {
             System.out.print("Calculating similarity and rating matrix... ");
             time = System.currentTimeMillis();
         }
-
         HashMap<Integer, Double> similarityMap = new HashMap(); // HashMap<ItemId, Similarity>
         RatingMatrix ratingMatrix = new RatingMatrix();
         for (Map.Entry<Double, User> entrySimilarUser : neighborhoodSimilarityUser.entrySet()) {
@@ -305,6 +304,7 @@ public class Recommender_Evaluator {
         for (Entry<Item, Double> entry : recommendations.entrySet()) {
             r = RatingTestDAO.get(iduser, entry.getKey().getIditem());
             if (r != null) {
+                //System.err.println("Diferencia: " + (r.getRating() - entry.getValue()));
                 mae = abs(r.getRating() - entry.getValue());
                 ++count;
             }

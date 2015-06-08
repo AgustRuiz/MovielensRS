@@ -44,7 +44,7 @@ public class ResultsEvaluation {
     public String getResults(){
         String output = "";
         for(EvaluationItem evaluation : this.listEvaluations.values()){
-            output += "MAE = " + evaluation.mae + " | K = " + evaluation.k + " | Time:  " + evaluation.time + "ms\n";
+            output += "MAE = " + evaluation.mae + "\t| K = " + evaluation.k + "\t| Time:  " + evaluation.time + "ms\n";
         }
         return output;
     }
