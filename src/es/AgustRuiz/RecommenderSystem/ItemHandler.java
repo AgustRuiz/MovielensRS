@@ -4,8 +4,11 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Item DAO
@@ -52,6 +55,14 @@ public class ItemHandler {
         }else{
             return null;
         }
+    }
+    
+    /**
+     * Get collection of items
+     * @return Collection of items
+     */
+    public Set<Item> getSet(){
+        return new HashSet<Item>(this.itemsMap.values());
     }
     
     /**

@@ -102,4 +102,9 @@ public class Pair_UserItem implements Comparable<Pair_UserItem> {
         }
         return false;
     }
+    
+    @Override
+    public String toString(){
+        return this.iduser + " " + this.iditem;
+    }
 }
