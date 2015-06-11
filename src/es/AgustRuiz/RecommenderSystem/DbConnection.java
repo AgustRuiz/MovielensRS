@@ -29,10 +29,14 @@ public class DbConnection {
     /// XMLHandler
     private static XMLHandler configXML;
 
+    /// Connection status
+    private static Boolean status = false;
+
     /**
      * Constructor
      */
-    private DbConnection() {}
+    private DbConnection() {
+    }
 
     /**
      * Gets connection
@@ -84,6 +88,11 @@ public class DbConnection {
         return DbConnection.url;
     }
 
+    public static boolean isOk() {
+        DbConnection.Connect();
+        return DbConnection.status;
+    }
+
     /**
      * Set connection
      */
@@ -102,12 +111,13 @@ public class DbConnection {
                 if (connection != null) {
                     //System.out.println("Conection to " + db + " OK");
                 }
-            } catch (SQLException e) {
-                System.err.println(e);
-            } catch (ClassNotFoundException e) {
-                System.err.println(e);
+                DbConnection.status = true;
+//            } catch (SQLException e) {
+//                System.err.println(e);
+//            } catch (ClassNotFoundException e) {
+//                System.err.println(e);
             } catch (Exception e) {
-                System.err.println(e);
+                DbConnection.status = false;
             }
         }
     }

@@ -88,4 +88,13 @@ public class UserHandler {
 
         return user;
     }
+    
+    /**
+     * Checks if exist an user id
+     * @param iduser
+     * @return True if exists of false otherwise
+     */
+    public Boolean existIduser(int iduser){
+        return this.usersMap.containsKey(iduser);
+    }
 }
