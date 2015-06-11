@@ -7,7 +7,7 @@ package es.AgustRuiz.RecommenderSystem;
 
 import static es.AgustRuiz.RecommenderSystem.Main.itemsHandler;
 import static es.AgustRuiz.RecommenderSystem.Main.ratingsHandler;
-import static es.AgustRuiz.RecommenderSystem.Main.similarityHandler;
+import static es.AgustRuiz.RecommenderSystem.Main.neighborhoodHandler;
 import static es.AgustRuiz.RecommenderSystem.Main.usersHandler;
 import java.util.ArrayList;
 import java.util.List;

@@ -7,7 +7,7 @@ package es.AgustRuiz.RecommenderSystem;
 
 import static es.AgustRuiz.RecommenderSystem.Main.itemsHandler;
 import static es.AgustRuiz.RecommenderSystem.Main.ratingsHandler;
-import static es.AgustRuiz.RecommenderSystem.Main.similarityHandler;
+import static es.AgustRuiz.RecommenderSystem.Main.neighborhoodHandler;
 import static es.AgustRuiz.RecommenderSystem.Main.usersHandler;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -62,14 +62,14 @@ public class Practice01 {
         // NEIGHBORHOOD
         System.out.print("Calculating neighborhood for user " + activeIduser + " (" + kSize + "-nn)... ");
         time = System.currentTimeMillis();
-        Map<Double, Integer> neighborhood = similarityHandler.calculateKNN(activeIduser, kSize);
+        Map<Double, Integer> neighborhood = neighborhoodHandler.calculateKNN(activeIduser, kSize);
         System.out.println("Done in " + (System.currentTimeMillis() - time) + "ms!");
 
         // RECOMMENDATIONS
         System.out.print("Calculating recommendations for user " + activeIduser + "... ");
         time = System.currentTimeMillis();
 
-        Map<Double, Integer> recommendations = RecommenderUtils.MakeRecommendations(usersHandler, itemsHandler, ratingsHandler, activeIduser, neighborhood);
+        Map<Double, Integer> recommendations = RecommenderUtils.RecommendationsKNN(activeIduser, kSize);
 
         System.out.println("Done in " + (System.currentTimeMillis() - time) + "ms!");
 

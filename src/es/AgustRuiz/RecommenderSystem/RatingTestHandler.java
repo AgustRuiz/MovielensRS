@@ -9,13 +9,13 @@ import java.util.HashMap;
  *
  * @author Agustin Ruiz Linares <arl00029@red.ujaen.es>
  */
-public class RatingHandler extends GenericTrainingHandler{
+public class RatingTestHandler extends GenericTrainingHandler{
 
     @Override
     void loadFromDb() {
         this.ratingMap = new HashMap();
         try {
-            PreparedStatement query = DbConnection.getConnection().prepareStatement("SELECT * FROM ratings");
+            PreparedStatement query = DbConnection.getConnection().prepareStatement("SELECT * FROM ratings_1_test");
             ResultSet rs = query.executeQuery();
             while (rs.next()) {
                 this.ratingMap.put(new Pair_UserItem(rs.getInt("iduser"), rs.getInt("iditem")), rs.getDouble("rating"));

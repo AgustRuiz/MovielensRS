@@ -13,7 +13,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import static es.AgustRuiz.RecommenderSystem.Main.itemsHandler;
 import static es.AgustRuiz.RecommenderSystem.Main.ratingsHandler;
-import static es.AgustRuiz.RecommenderSystem.Main.similarityHandler;
+import static es.AgustRuiz.RecommenderSystem.Main.neighborhoodHandler;
 import static es.AgustRuiz.RecommenderSystem.Main.usersHandler;
 
 /**

@@ -26,7 +26,7 @@ public class NeighborsHandler {
     UserHandler users;
 
     /// Ratings handler
-    RatingHandler ratings;
+    GenericTrainingHandler ratings;
 
     /// Similarity matrix: HashMap<user1, HashMap<user2, similarity>>
     HashMap<Integer, HashMap<Integer, Double>> similarityMatrix;
@@ -41,7 +41,7 @@ public class NeighborsHandler {
      * @param users Users handler
      * @param ratings Ratings handler
      */
-    public NeighborsHandler(ItemHandler items, UserHandler users, RatingHandler ratings) {
+    public NeighborsHandler(ItemHandler items, UserHandler users, GenericTrainingHandler ratings) {
         this.similarityMatrix = new HashMap();
         this.neighborsMatrix = new HashMap();
         this.items = items;

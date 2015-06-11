@@ -22,8 +22,11 @@ public class Main {
 
     public static UserHandler usersHandler;
     public static ItemHandler itemsHandler;
-    public static RatingHandler ratingsHandler;
-    public static NeighborsHandler similarityHandler;
+    public static GenericTrainingHandler ratingsHandler;
+    public static GenericTrainingHandler ratingsTrainingHandler;
+    public static GenericTrainingHandler ratingsTestHandler;
+    public static NeighborsHandler neighborhoodHandler;
+    public static NeighborsHandler trainingNeighborhoodHandler;
 
     /**
      * @param args the command line arguments
@@ -52,10 +55,28 @@ public class Main {
             ratingsHandler = new RatingHandler();
             System.out.println("Done in " + (System.currentTimeMillis() - time) + "ms!");
 
-            // SIMILARITY HANDLER
-            System.out.print("Building similarity handler... ");
+            // TRAINING RATINGS 
+            System.out.print("Loading training ratings and building training rating matrix... ");
             time = System.currentTimeMillis();
-            similarityHandler = new NeighborsHandler(itemsHandler, usersHandler, ratingsHandler);
+            ratingsTrainingHandler = new RatingTrainingHandler();
+            System.out.println("Done in " + (System.currentTimeMillis() - time) + "ms!");
+
+            // TEST RATINGS 
+            System.out.print("Loading test ratings and building training rating matrix... ");
+            time = System.currentTimeMillis();
+            ratingsTestHandler = new RatingTestHandler();
+            System.out.println("Done in " + (System.currentTimeMillis() - time) + "ms!");
+
+            // NEIGHBORS HANDLER
+            System.out.print("Building neighbors handler... ");
+            time = System.currentTimeMillis();
+            neighborhoodHandler = new NeighborsHandler(itemsHandler, usersHandler, ratingsHandler);
+            System.out.println("Done in " + (System.currentTimeMillis() - time) + "ms!");
+
+            // NEIGHBORS TRAINING HANDLER
+            System.out.print("Building training neighbors handler... ");
+            time = System.currentTimeMillis();
+            trainingNeighborhoodHandler = new NeighborsHandler(itemsHandler, usersHandler, ratingsTrainingHandler);
             System.out.println("Done in " + (System.currentTimeMillis() - time) + "ms!");
             
             GUI.MainMenu();
