@@ -46,7 +46,7 @@ public class GUI {
                     GUI.MainMenu_Practice01();
                     break;
                 case 2:
-                    //GUI.MainMenu_Practice02();
+                    GUI.MainMenu_Practice02();
                     break;
             }
         }
@@ -153,76 +153,55 @@ public class GUI {
         }
     }
 
-//    /**
-//     * Practice 2 - Main menu
-//     */
-//    private static void MainMenu_Practice02() {
-//        int selectedOption = -1;
-//        while (selectedOption != 0) {
-//            System.out.println("");
-//            System.out.println("+------------------------+");
-//            System.out.println("| PRACTICE 2: EVALUATION |");
-//            System.out.println("+------------------------+");
-//            System.out.println("Please, select an option:");
-//            System.out.println("");
-//            System.out.println("[1] Select UserId. Current: " + Recommender_Evaluator.getActiveUserId() + ".");
-//            System.out.println("[2] Add K value. Current: " + Recommender_Evaluator.getKValuesInString() + ".");
-//            System.out.println("[3] Reset K values.");
-//            System.out.println("[4] Run evaluator.");
-//            System.out.println("[0] Back.");
-//            System.out.println("");
-//            System.out.print("Option: ");
-//            selectedOption = GUI.getIntegerFromKeyboard();
-//            switch (selectedOption) {
-//                case 1:
-//                    GUI.changeActiveUser_Practice02();
-//                    break;
-//                case 2:
-//                    GUI.addKValue_Practice02();
-//                    break;
-//                case 3:
-//                    Recommender_Evaluator.resetKValue();
-//                    break;
-//                case 4:
-//                    System.out.println("");
-//                    System.out.println("+-----------+");
-//                    System.out.println("| EVALUATOR |");
-//                    System.out.println("+-----------+");
-//                    Recommender_Evaluator.Run();
-//                    GUI.pauseProg();
-//                    break;
-//            }
-//        }
-//    }
-//
-//    /**
-//     * Change K value (for KNN)
-//     */
-//    private final static void addKValue_Practice02() {
-//        int kvalue;
-//        do{
-//        System.out.print("Enter K value (0 to exit): ");
-//        kvalue = GUI.getIntegerFromKeyboard();
-//        if (kvalue > 0 && kvalue <= UserDAO.count() && !Recommender_Evaluator.hasKValue(kvalue)) {
-//            Recommender_Evaluator.addKValue(kvalue);
-//        }
-//        }while(kvalue > 0);
-//    }
-//
-//    /**
-//     * Change active user
-//     */
-//    private final static void changeActiveUser_Practice02() {
-//        System.out.println("");
-//        System.out.println("+----------------+");
-//        System.out.println("| CHANGE USER ID |");
-//        System.out.println("+----------------+");
-//        System.out.println("");
-//        System.out.print("Enter active user id: ");
-//
-//        int userSelected = GUI.getIntegerFromKeyboard();
-//        if (UserDAO.existIduser(userSelected)) {
-//            Recommender_Evaluator.setActiveUserId(userSelected);
-//        }
-//    }
+    /**
+     * Practice 2 - Main menu
+     */
+    private static void MainMenu_Practice02() {
+        int selectedOption = -1;
+        while (selectedOption != 0) {
+            System.out.println("");
+            System.out.println("+------------------------+");
+            System.out.println("| PRACTICE 2: EVALUATION |");
+            System.out.println("+------------------------+");
+            System.out.println("Please, select an option:");
+            System.out.println("");
+            System.out.println("[1] Add K value. Current: " + Practice02.getKSizes() + ".");
+            System.out.println("[2] Reset K values.");
+            System.out.println("[3] Run evaluator.");
+            System.out.println("[0] Back.");
+            System.out.println("");
+            System.out.print("Option: ");
+            selectedOption = GUI.getIntegerFromKeyboard();
+            switch (selectedOption) {
+                case 1:
+                    GUI.addKValue_Practice02();
+                    break;
+                case 2:
+                    Practice02.clearKSizes();
+                    break;
+                case 3:
+                    System.out.println("");
+                    System.out.println("+-----------+");
+                    System.out.println("| EVALUATOR |");
+                    System.out.println("+-----------+");
+                    //Practice02.Run();
+                    GUI.pauseProg();
+                    break;
+            }
+        }
+    }
+
+    /**
+     * Change K value (for KNN)
+     */
+    private static void addKValue_Practice02() {
+        int kSize;
+        do{
+        System.out.print("Enter new K value (0 to exit): ");
+        kSize = GUI.getIntegerFromKeyboard();
+        if (kSize > 0 && kSize <= usersHandler.count() && !Practice02.hasKSize(kSize)) {
+            Practice02.addKSize(kSize);
+        }
+        }while(kSize > 0);
+    }
 }

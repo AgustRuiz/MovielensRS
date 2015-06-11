@@ -19,6 +19,7 @@ import java.util.Map.Entry;
 public class Practice01 {
 
     private static int activeIduser = 23;
+    private static int kSize = 20;
 
     /**
      * Gets active user id
@@ -51,7 +52,6 @@ public class Practice01 {
     public static void setkSize(int kSize) {
         Practice01.kSize = kSize;
     }
-    private static int kSize = 20;
 
     /**
      * Run recommender
