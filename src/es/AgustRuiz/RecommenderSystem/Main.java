@@ -23,7 +23,7 @@ public class Main {
     public static UserHandler usersHandler;
     public static ItemHandler itemsHandler;
     public static RatingHandler ratingsHandler;
-    public static SimilarityHandler similarityHandler;
+    public static NeighborsHandler similarityHandler;
 
     /**
      * @param args the command line arguments
@@ -55,9 +55,8 @@ public class Main {
             // SIMILARITY HANDLER
             System.out.print("Building similarity handler... ");
             time = System.currentTimeMillis();
-            similarityHandler = new SimilarityHandler(itemsHandler, usersHandler, ratingsHandler);
+            similarityHandler = new NeighborsHandler(itemsHandler, usersHandler, ratingsHandler);
             System.out.println("Done in " + (System.currentTimeMillis() - time) + "ms!");
-            
             
             GUI.MainMenu();
         }

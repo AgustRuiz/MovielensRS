@@ -5,9 +5,7 @@
  */
 package es.AgustRuiz.RecommenderSystem;
 
-import static com.sun.org.apache.xalan.internal.lib.ExsltDynamic.map;
 import static java.lang.Math.sqrt;
-import java.util.AbstractMap;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.Collections;
 import java.util.HashMap;
@@ -19,12 +17,22 @@ import java.util.TreeMap;
  *
  * @author Agustin Ruiz Linares <arl00029@red.ujaen.es>
  */
-public class SimilarityHandler {
+public class NeighborsHandler {
 
-    HashMap<Integer, HashMap<Integer, Double>> matrix;
+    /// Items handler
     ItemHandler items;
+
+    /// Users handler
     UserHandler users;
+
+    /// Ratings handler
     RatingHandler ratings;
+
+    /// Similarity matrix: HashMap<user1, HashMap<user2, similarity>>
+    HashMap<Integer, HashMap<Integer, Double>> similarityMatrix;
+
+    /// Neighbors matrix: HashMap<activeIduser HashMap<similarity, user2>>
+    HashMap<Integer, TreeMap<Double, Integer>> neighborsMatrix;
 
     /**
      * Constructor
@@ -33,8 +41,9 @@ public class SimilarityHandler {
      * @param users Users handler
      * @param ratings Ratings handler
      */
-    public SimilarityHandler(ItemHandler items, UserHandler users, RatingHandler ratings) {
-        matrix = new HashMap();
+    public NeighborsHandler(ItemHandler items, UserHandler users, RatingHandler ratings) {
+        this.similarityMatrix = new HashMap();
+        this.neighborsMatrix = new HashMap();
         this.items = items;
         this.users = users;
         this.ratings = ratings;
@@ -72,11 +81,11 @@ public class SimilarityHandler {
                 v = user1;
             }
 
-            if (!matrix.containsKey(u)) {
-                matrix.put(u, new HashMap());
+            if (!similarityMatrix.containsKey(u)) {
+                similarityMatrix.put(u, new HashMap());
             }
 
-            matrix.get(u).put(v, similarity);
+            similarityMatrix.get(u).put(v, similarity);
         }
     }
 
@@ -93,35 +102,41 @@ public class SimilarityHandler {
                 v = user1;
             }
 
-            if (!matrix.containsKey(u) || !matrix.get(u).containsKey(v)) {
+            if (!similarityMatrix.containsKey(u) || !similarityMatrix.get(u).containsKey(v)) {
                 this.calculateSimilarity(u, v);
             }
 
-            return matrix.get(u).get(v);
+            return similarityMatrix.get(u).get(v);
         }
     }
 
-    public Map<Double, Integer> calculateKNN(int idActiveUser, int kValue) {
-        TreeMap<Double, Integer> allNeighbors = new TreeMap(Collections.reverseOrder());
-        TreeMap<Double, Integer> topKNeighbors = new TreeMap(Collections.reverseOrder());
-        Integer idCurrentUser;
-        Double currentSimilarity;
-        for (User u : users.getCollection()) {
-            idCurrentUser = u.getIduser();
-            currentSimilarity = this.getSimilarity(idActiveUser, idCurrentUser);
-            if (!currentSimilarity.isNaN()) {
-                allNeighbors.put(currentSimilarity, idCurrentUser);
+    public Map<Double, Integer> calculateKNN(int idActiveUser, int kSize) {
+        if (!this.neighborsMatrix.containsKey(idActiveUser)) {
+            this.neighborsMatrix.put(idActiveUser, new TreeMap(Collections.reverseOrder()));
+
+            Integer idCurrentUser;
+            Double currentSimilarity;
+            for (User u : users.getCollection()) {
+                idCurrentUser = u.getIduser();
+                currentSimilarity = this.getSimilarity(idActiveUser, idCurrentUser);
+                if (!currentSimilarity.isNaN()) {
+                    this.neighborsMatrix.get(idActiveUser).put(currentSimilarity, idCurrentUser);
+                }
             }
+
         }
-        
+
+        TreeMap<Double, Integer> allNeighbors = (TreeMap<Double, Integer>)this.neighborsMatrix.get(idActiveUser).clone();
+        TreeMap<Double, Integer> topKNeighbors = new TreeMap(Collections.reverseOrder());
+
         Entry<Double, Integer> entry;
-        for(int i = 0 ; i < kValue && !allNeighbors.isEmpty() ; ++i){
+        for (int i = 0; i < kSize && !allNeighbors.isEmpty(); ++i) {
             entry = new SimpleEntry(allNeighbors.firstEntry());
             allNeighbors.remove(entry.getKey());
             topKNeighbors.put(entry.getKey(), entry.getValue());
         }
         return topKNeighbors;
-        
+
     }
 
 }
