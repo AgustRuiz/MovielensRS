@@ -5,10 +5,6 @@
  */
 package es.AgustRuiz.RecommenderSystem;
 
-import static es.AgustRuiz.RecommenderSystem.Main.itemsHandler;
-import static es.AgustRuiz.RecommenderSystem.Main.ratingsHandler;
-import static es.AgustRuiz.RecommenderSystem.Main.neighborhoodHandler;
-import static es.AgustRuiz.RecommenderSystem.Main.usersHandler;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -62,7 +58,6 @@ public class Practice01 {
         // NEIGHBORHOOD
         System.out.print("Calculating neighborhood for user " + activeIduser + " (" + kSize + "-nn)... ");
         time = System.currentTimeMillis();
-        Map<Double, Integer> neighborhood = neighborhoodHandler.calculateKNN(activeIduser, kSize);
         System.out.println("Done in " + (System.currentTimeMillis() - time) + "ms!");
 
         // RECOMMENDATIONS
