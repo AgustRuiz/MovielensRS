@@ -15,7 +15,7 @@ import java.util.Set;
  *
  * @author Agustin Ruiz Linares <arl00029@red.ujaen.es>
  */
-public abstract class GenericTrainingHandler {
+public abstract class GenericRatingHandler {
     
     protected HashMap<Pair_UserItem, Double> ratingMap;
     protected HashMap<Integer, Double> avgUserRatings;
@@ -23,7 +23,7 @@ public abstract class GenericTrainingHandler {
     /**
      * Constructor
      */
-    public GenericTrainingHandler() {
+    public GenericRatingHandler() {
         LoadFromDb();
         this.CalculateAvgUserRating();
     }
