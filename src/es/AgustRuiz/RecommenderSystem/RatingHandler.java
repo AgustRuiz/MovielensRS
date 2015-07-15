@@ -9,8 +9,8 @@ import java.util.HashMap;
  *
  * @author Agustin Ruiz Linares <arl00029@red.ujaen.es>
  */
-public class RatingHandler extends GenericRatingHandler{
-
+public class RatingHandler extends GenericRatingHandler {
+    
     @Override
     void LoadFromDb() {
         this.ratingMap = new HashMap();
@@ -25,5 +25,28 @@ public class RatingHandler extends GenericRatingHandler{
         } catch (Exception e) {
             System.err.println("Can't get list of ratings from database. " + e);
         }
+    }
+    
+    @Override
+    Double GetAvgCorating(int activeUserid, int referenceUserid) {
+        if (!this.avgCorating.containsKey(activeUserid)) {
+            this.avgCorating.put(activeUserid, new HashMap<Integer, Double>());
+        }
+        if(!this.avgCorating.get(activeUserid).containsKey(referenceUserid)){
+            Double avgRating = null;
+            try {
+                PreparedStatement query = DbConnection.getConnection().prepareStatement("SELECT avg(rating) FROM ratings WHERE iduser=" + activeUserid + " AND iditem IN (SELECT iditem FROM ratings WHERE iduser=" + referenceUserid + ")");
+                ResultSet rs = query.executeQuery();
+                if (rs.next()) {
+                    avgRating = rs.getDouble(1);
+                }
+                rs.close();
+                query.close();
+            } catch (Exception e) {
+                System.err.println("Can't get ratings from database. " + e);
+            }
+            this.avgCorating.get(activeUserid).put(referenceUserid, avgRating);
+        }
+        return this.avgCorating.get(activeUserid).get(referenceUserid);
     }
 }

@@ -36,13 +36,17 @@ public class RecommenderUtils {
             currentIdItem = item.getIditem();
             Double dividend = 0.0, divisor = 0.0, similarity = 0.0, currentRating;
             if (ratingsHandler.Get(activeIdUser, currentIdItem) == null) {
-                for (Map.Entry<Double, Integer> neighbor : neighborhood.entrySet()) {
+                for (Entry<Double, Integer> neighbor : neighborhood.entrySet()) {
                     similarity = neighbor.getKey();
                     currentIdUser = neighbor.getValue();
                     currentRating = ratingsHandler.Get(currentIdUser, currentIdItem);
                     if (currentRating != null) {
-                        dividend += similarity * (currentRating - ratingsHandler.GetAvgRatingsUser(currentIdUser));
-                        divisor += abs(similarity);
+                        //dividend += similarity * (currentRating - ratingsHandler.GetAvgRatingsUser(currentIdUser));
+                        Double avgCorated = ratingsHandler.GetAvgCorating(activeIdUser, currentIdUser);
+                        if (avgCorated != null) {
+                            dividend += similarity * (currentRating - avgCorated);
+                            divisor += abs(similarity);
+                        }
                     }
                 }
                 if (divisor != 0) {
@@ -67,7 +71,7 @@ public class RecommenderUtils {
      */
     public static Double PredictRating_Training(int iduser, int iditem, int kSize) {
         Double prediction = null;
-        
+
         int currentIdUser;
         Double similarity, currentRating, dividend, divisor;
         Double avgActiveUser = ratingsTrainingHandler.GetAvgRatingsUser(iduser);
@@ -83,18 +87,23 @@ public class RecommenderUtils {
                 currentIdUser = neighbor.getValue();
                 currentRating = ratingsTrainingHandler.Get(currentIdUser, iditem);
                 if (currentRating != null) {
-                    dividend += similarity * (currentRating - ratingsTrainingHandler.GetAvgRatingsUser(currentIdUser));
-                    divisor += abs(similarity);
+                    //dividend += similarity * (currentRating - ratingsTrainingHandler.GetAvgRatingsUser(currentIdUser));
+
+                    Double avgCorated = ratingsTrainingHandler.GetAvgCorating(iduser, currentIdUser);
+                    if (avgCorated != null) {
+                        dividend += similarity * (currentRating - avgCorated);
+                        divisor += abs(similarity);
+                    }
                 }
                 //break;
             }
             if (divisor != 0) {
                 prediction = avgActiveUser + (dividend / divisor);
-                if(prediction > 5){
+                if (prediction > 5) {
                     prediction = 5.0;
                 }
             }
-        }else{
+        } else {
             prediction = ratingsTrainingHandler.Get(iduser, iditem);
         }
 

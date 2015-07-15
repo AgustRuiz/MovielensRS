@@ -17,6 +17,7 @@ public abstract class GenericRatingHandler {
     
     protected HashMap<Pair_UserItem, Double> ratingMap;
     protected HashMap<Integer, Double> avgUserRatings;
+    protected HashMap<Integer, HashMap<Integer, Double> > avgCorating;
 
     /**
      * Constructor
@@ -24,6 +25,7 @@ public abstract class GenericRatingHandler {
     public GenericRatingHandler() {
         LoadFromDb();
         this.CalculateAvgUserRating();
+        this.avgCorating = new HashMap<>();
     }
 
     /**
@@ -32,6 +34,13 @@ public abstract class GenericRatingHandler {
      * @return List of ratings from database
      */
     abstract void LoadFromDb();
+
+    /**
+     * Loads list of ratings from database
+     *
+     * @return List of ratings from database
+     */
+    abstract Double GetAvgCorating(int activeUserid, int referenceUserid);
 
     /**
      * Calculate avg ratings for users

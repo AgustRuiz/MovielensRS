@@ -11,6 +11,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.Vector;
 
@@ -74,8 +75,10 @@ public class NeighborsHandler {
                 iditem = item.getIditem();
 
                 if (ratings.Get(user1Id, iditem) != null && ratings.Get(user2Id, iditem) != null) {
-                    user1Calc = ratings.Get(user1Id, iditem) - ratings.GetAvgRatingsUser(user1Id);
-                    user2Calc = ratings.Get(user2Id, iditem) - ratings.GetAvgRatingsUser(user2Id);
+                    //user1Calc = ratings.Get(user1Id, iditem) - ratings.GetAvgRatingsUser(user1Id);
+                    //user2Calc = ratings.Get(user2Id, iditem) - ratings.GetAvgRatingsUser(user2Id);
+                    user1Calc = ratings.Get(user1Id, iditem) - ratings.GetAvgCorating(user1Id, user2Id);
+                    user2Calc = ratings.Get(user2Id, iditem) - ratings.GetAvgCorating(user2Id, user1Id);
                     dividend += user1Calc * user2Calc;
                     divisor1 += user1Calc * user1Calc;
                     divisor2 += user2Calc * user2Calc;
@@ -106,7 +109,7 @@ public class NeighborsHandler {
         return similarityMatrix.get(myPair);
     }
 
-    public Map<Double, Integer> calculateKNN(int idActiveUser, int kSize, boolean filePrint) {
+    public TreeMap<Double, Integer> calculateKNN(int idActiveUser, int kSize, boolean filePrint) {
 
         // TIME PROBLEMS HERE
         if (!this.neighborsMatrix.containsKey(idActiveUser)) {
