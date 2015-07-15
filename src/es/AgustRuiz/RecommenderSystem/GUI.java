@@ -37,6 +37,7 @@ public class GUI {
             System.out.println("");
             System.out.println("[1] Practice 1 - Collaborative Recommendation System.");
             System.out.println("[2] Practice 2 - Evaluation.");
+            System.out.println("[3] About.");
             System.out.println("[0] Exit.");
             System.out.println("");
             System.out.print("Option: ");
@@ -47,6 +48,9 @@ public class GUI {
                     break;
                 case 2:
                     GUI.MainMenu_Practice02();
+                    break;
+                case 3:
+                    GUI.About();
                     break;
             }
         }
@@ -184,7 +188,7 @@ public class GUI {
                     System.out.println("+-----------+");
                     System.out.println("| EVALUATOR |");
                     System.out.println("+-----------+");
-                    //Practice02.Run();
+                    Practice02.Run();
                     GUI.pauseProg();
                     break;
             }
@@ -196,12 +200,28 @@ public class GUI {
      */
     private static void addKValue_Practice02() {
         int kSize;
-        do{
-        System.out.print("Enter new K value (0 to exit): ");
-        kSize = GUI.getIntegerFromKeyboard();
-        if (kSize > 0 && kSize <= usersHandler.count() && !Practice02.hasKSize(kSize)) {
-            Practice02.addKSize(kSize);
-        }
-        }while(kSize > 0);
+        do {
+            System.out.print("Enter new K value (0 to exit): ");
+            kSize = GUI.getIntegerFromKeyboard();
+            if (kSize > 0 && kSize <= usersHandler.count() && !Practice02.hasKSize(kSize)) {
+                Practice02.addKSize(kSize);
+            }
+        } while (kSize > 0);
+    }
+
+    /**
+     * Practice 2 - Main menu
+     */
+    private static void About() {
+        System.out.println("+-------+");
+        System.out.println("| ABOUT |");
+        System.out.println("+-------+");
+        System.out.println("");
+        System.out.println("Developed by Agustín Ruiz Linares <arl00029@red.ujaen.es>.");
+        System.out.println("Subject: Business Ingeligence and Web - Module III: Recommender Systems.");
+        System.out.println("Year: 2015.");
+        System.out.println("University of Jaén.");
+        System.out.println("");
+        pauseProg();
     }
 }

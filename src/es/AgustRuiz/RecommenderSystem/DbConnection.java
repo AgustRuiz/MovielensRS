@@ -26,8 +26,8 @@ public class DbConnection {
     /// Connection
     private static Connection connection = null;
 
-    /// XMLHandler
-    private static XMLHandler configXML;
+    /// XMLConnectionHandler
+    private static XMLConnectionHandler configXML;
 
     /// Connection status
     private static Boolean status = false;
@@ -98,7 +98,7 @@ public class DbConnection {
      */
     private static void Connect() {
         if (connection == null) {
-            DbConnection.configXML = new XMLHandler(("./DbConnection.xml"));
+            DbConnection.configXML = new XMLConnectionHandler(("./DbConnection.xml"));
             if (configXML.isOK()) {
                 DbConnection.db = DbConnection.configXML.getNode("DataBase");
                 DbConnection.username = DbConnection.configXML.getNode("UserName");

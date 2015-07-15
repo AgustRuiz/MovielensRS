@@ -24,8 +24,8 @@ public abstract class GenericTrainingHandler {
      * Constructor
      */
     public GenericTrainingHandler() {
-        loadFromDb();
-        this.calculateAvgUserRating();
+        LoadFromDb();
+        this.CalculateAvgUserRating();
     }
 
     /**
@@ -33,12 +33,12 @@ public abstract class GenericTrainingHandler {
      *
      * @return List of ratings from database
      */
-    abstract void loadFromDb();
+    abstract void LoadFromDb();
 
     /**
      * Calculate avg ratings for users
      */
-    protected void calculateAvgUserRating() {
+    protected void CalculateAvgUserRating() {
         if (this.avgUserRatings == null) {
             this.avgUserRatings = new HashMap();
         }
@@ -69,7 +69,7 @@ public abstract class GenericTrainingHandler {
      * @param iditem Item id
      * @return Rating or null if not exists
      */
-    public Double get(int iduser, int iditem) {
+    public Double Get(int iduser, int iditem) {
         Pair_UserItem pair = new Pair_UserItem(iduser, iditem);
         if (this.ratingMap.containsKey(pair)) {
             return this.ratingMap.get(pair);
@@ -83,7 +83,7 @@ public abstract class GenericTrainingHandler {
      *
      * @return Number of ratings
      */
-    public int count() {
+    public int Count() {
         return this.ratingMap.size();
     }
     
@@ -91,7 +91,7 @@ public abstract class GenericTrainingHandler {
         return this.ratingMap.entrySet();
     }
     
-    public Double getAvgRatingsUser(int iduser) {
+    public Double GetAvgRatingsUser(int iduser) {
         if (this.avgUserRatings.containsKey(iduser)) {
             return this.avgUserRatings.get(iduser);
         }else{

@@ -5,24 +5,22 @@
  */
 package es.AgustRuiz.RecommenderSystem;
 
-import java.awt.PageAttributes;
 import java.io.File;
-import javax.swing.text.Document;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import org.w3c.dom.Element;
+import org.w3c.dom.Document;
 
 /**
  * XML Handler
  * @author Agustin Ruiz Linares <arl00029@red.ujaen.es>
  */
-public class XMLHandler {
+public class XMLConnectionHandler {
 
     private String path;
-    private org.w3c.dom.Document doc;
+    private Document doc;
     private Boolean isOk;
 
-    public XMLHandler(String path) {
+    public XMLConnectionHandler(String path) {
         this.path = path;
         try {
             File fXmlFile = new File(this.path);
@@ -36,6 +34,8 @@ public class XMLHandler {
             this.isOk = false;
         }
     }
+    
+    //public ReadDbConnection()
     
     public String getNode(String nodeName){
         if(this.isOk)

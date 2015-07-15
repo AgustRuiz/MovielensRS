@@ -78,7 +78,7 @@ public class Main {
             time = System.currentTimeMillis();
             trainingNeighborhoodHandler = new NeighborsHandler(itemsHandler, usersHandler, ratingsTrainingHandler);
             System.out.println("Done in " + (System.currentTimeMillis() - time) + "ms!");
-            
+
             GUI.MainMenu();
         }
     }

@@ -5,6 +5,7 @@
  */
 package es.AgustRuiz.RecommenderSystem;
 
+import java.util.Calendar;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -55,11 +56,6 @@ public class Practice01 {
     public static void Run() {
         long time;
 
-        // NEIGHBORHOOD
-        System.out.print("Calculating neighborhood for user " + activeIduser + " (" + kSize + "-nn)... ");
-        time = System.currentTimeMillis();
-        System.out.println("Done in " + (System.currentTimeMillis() - time) + "ms!");
-
         // RECOMMENDATIONS
         System.out.print("Calculating recommendations for user " + activeIduser + "... ");
         time = System.currentTimeMillis();
@@ -67,10 +63,24 @@ public class Practice01 {
         Map<Double, Integer> recommendations = RecommenderUtils.RecommendationsKNN(activeIduser, kSize);
 
         System.out.println("Done in " + (System.currentTimeMillis() - time) + "ms!");
+        
+        Practice01.PrintRecommendations(activeIduser, kSize, recommendations);
 
         for (Entry<Double, Integer> entry : recommendations.entrySet()) {
             System.out.println("Item: " + entry.getValue() + "\t Rating: " + entry.getKey());
         }
     }
-
+    
+    public static void PrintRecommendations(int idActiveUser, int kSize,  Map<Double, Integer> recommendations){
+            FileWriter fileWriter = new FileWriter("Recommendations_User" + idActiveUser + ".txt");
+            fileWriter.Write("RECOMMENDATIONS");
+            fileWriter.Write("Active user: " + idActiveUser + " | k = " + kSize + " | Time: "+Calendar.getInstance().getTime().toString());
+            fileWriter.Write("");
+            fileWriter.Write("[Ord.]\tITEM\t\tRATING");
+            int i = 0;
+            for(Entry<Double, Integer> entry : recommendations.entrySet()){ 
+            fileWriter.Write("["+String.format("%4d", ++i)+"]\tItem'"+entry.getValue()+"':\t\t"+entry.getKey());
+            }
+            fileWriter.Close();
+    }
 }

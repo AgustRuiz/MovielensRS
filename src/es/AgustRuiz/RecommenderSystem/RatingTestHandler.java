@@ -12,7 +12,7 @@ import java.util.HashMap;
 public class RatingTestHandler extends GenericTrainingHandler{
 
     @Override
-    void loadFromDb() {
+    void LoadFromDb() {
         this.ratingMap = new HashMap();
         try {
             PreparedStatement query = DbConnection.getConnection().prepareStatement("SELECT * FROM ratings_1_test");
@@ -23,7 +23,7 @@ public class RatingTestHandler extends GenericTrainingHandler{
             rs.close();
             query.close();
         } catch (Exception e) {
-            System.err.println("Can't get list of ratings (training) from database. " + e);
+            System.err.println("Can't get list of ratings (test) from database. " + e);
         }
     }
 }

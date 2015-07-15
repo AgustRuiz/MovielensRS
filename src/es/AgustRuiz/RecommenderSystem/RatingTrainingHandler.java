@@ -12,7 +12,7 @@ import java.util.HashMap;
 public class RatingTrainingHandler extends GenericTrainingHandler{
 
     @Override
-    void loadFromDb() {
+    void LoadFromDb() {
         this.ratingMap = new HashMap();
         try {
             PreparedStatement query = DbConnection.getConnection().prepareStatement("SELECT * FROM ratings_1_training");

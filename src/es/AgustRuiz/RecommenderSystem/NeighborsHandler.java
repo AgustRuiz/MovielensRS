@@ -7,11 +7,14 @@ package es.AgustRuiz.RecommenderSystem;
 
 import static java.lang.Math.sqrt;
 import java.util.AbstractMap.SimpleEntry;
+import java.util.Calendar;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.TreeMap;
+import java.util.Vector;
 
 /**
  *
@@ -25,11 +28,13 @@ public class NeighborsHandler {
     /// Users handler
     UserHandler users;
 
+    private Vector<Integer> idUsers;
+
     /// Ratings handler
     GenericTrainingHandler ratings;
 
     /// Similarity matrix: HashMap<user1, HashMap<user2, similarity>>
-    HashMap<Integer, HashMap<Integer, Double>> similarityMatrix;
+    HashMap<Pair_UserUser, Double> similarityMatrix;
 
     /// Neighbors matrix: HashMap<activeIduser HashMap<similarity, user2>>
     HashMap<Integer, TreeMap<Double, Integer>> neighborsMatrix;
@@ -47,96 +52,108 @@ public class NeighborsHandler {
         this.items = items;
         this.users = users;
         this.ratings = ratings;
+
+        this.idUsers = new Vector();
+        for (User u : users.getCollection()) {
+            this.idUsers.add(u.getIduser());
+        }
     }
 
-    private void calculateSimilarity(int user1Id, int user2Id) {
-        int iditem;
-        Double user1Calc, user2Calc, dividend = 0.0, divisor1 = 0.0, divisor2 = 0.0;
+    /**
+     * Calculate similarity between users
+     *
+     * @param user1Id User Id 1
+     * @param user2Id User Id 2
+     */
+    private void CalculateSimilarity(int user1Id, int user2Id) {
 
-        for (Item item : items.getSet()) {
-            iditem = item.getIditem();
+        if (user1Id == user2Id) {
+            this.setValue(user1Id, user2Id, 1.0);
+        } else {
+            int iditem;
+            Double user1Calc, user2Calc, dividend = 0.0, divisor1 = 0.0, divisor2 = 0.0;
 
-            if (ratings.get(user1Id, iditem) != null && ratings.get(user2Id, iditem) != null) {
-                user1Calc = ratings.get(user1Id, iditem) - ratings.getAvgRatingsUser(user1Id);
-                user2Calc = ratings.get(user2Id, iditem) - ratings.getAvgRatingsUser(user2Id);
-                dividend += user1Calc * user2Calc;
-                divisor1 += user1Calc * user1Calc;
-                divisor2 += user2Calc * user2Calc;
+            for (Item item : items.getSet()) { // max 2 ms
+                iditem = item.getIditem();
+
+                if (ratings.Get(user1Id, iditem) != null && ratings.Get(user2Id, iditem) != null) {
+                    user1Calc = ratings.Get(user1Id, iditem) - ratings.GetAvgRatingsUser(user1Id);
+                    user2Calc = ratings.Get(user2Id, iditem) - ratings.GetAvgRatingsUser(user2Id);
+                    dividend += user1Calc * user2Calc;
+                    divisor1 += user1Calc * user1Calc;
+                    divisor2 += user2Calc * user2Calc;
+                }
+
             }
+
+            Double similarity = dividend / sqrt(divisor1 * divisor2);
+            if (similarity.isNaN() || similarity < -1) {
+                similarity = -1.0;
+            } else if (similarity > 1) {
+                similarity = 1.0;
+            }
+
+            this.setValue(user1Id, user2Id, similarity);
         }
-
-        Double similarity = dividend / sqrt(divisor1 * divisor2);
-        this.setValue(user1Id, user2Id, similarity);
-
     }
 
     private void setValue(int user1, int user2, Double similarity) {
-        if (user1 != user2) {
-            int u, v;
-            if (user1 < user2) {
-                u = user1;
-                v = user2;
-            } else {
-                u = user2;
-                v = user1;
-            }
-
-            if (!similarityMatrix.containsKey(u)) {
-                similarityMatrix.put(u, new HashMap());
-            }
-
-            similarityMatrix.get(u).put(v, similarity);
-        }
+        similarityMatrix.put(new Pair_UserUser(user1, user2), similarity);
     }
 
-    public Double getSimilarity(int user1, int user2) {
-        if (user1 == user2) {
-            return 1.0;
-        } else {
-            int u, v;
-            if (user1 < user2) {
-                u = user1;
-                v = user2;
-            } else {
-                u = user2;
-                v = user1;
-            }
-
-            if (!similarityMatrix.containsKey(u) || !similarityMatrix.get(u).containsKey(v)) {
-                this.calculateSimilarity(u, v);
-            }
-
-            return similarityMatrix.get(u).get(v);
+    public Double GetSimilarity(int user1, int user2) {
+        Pair_UserUser myPair = new Pair_UserUser(user1, user2);
+        if (!similarityMatrix.containsKey(myPair)) {
+            this.CalculateSimilarity(user1, user2);
         }
+        return similarityMatrix.get(myPair);
     }
 
-    public Map<Double, Integer> calculateKNN(int idActiveUser, int kSize) {
+    public Map<Double, Integer> calculateKNN(int idActiveUser, int kSize, boolean filePrint) {
+
+        // TIME PROBLEMS HERE
         if (!this.neighborsMatrix.containsKey(idActiveUser)) {
             this.neighborsMatrix.put(idActiveUser, new TreeMap(Collections.reverseOrder()));
-
-            Integer idCurrentUser;
-            Double currentSimilarity;
-            for (User u : users.getCollection()) {
-                idCurrentUser = u.getIduser();
-                currentSimilarity = this.getSimilarity(idActiveUser, idCurrentUser);
-                if (!currentSimilarity.isNaN()) {
-                    this.neighborsMatrix.get(idActiveUser).put(currentSimilarity, idCurrentUser);
-                }
+            for (int idCurrentUser : this.idUsers) {
+                this.neighborsMatrix.get(idActiveUser).put(this.GetSimilarity(idActiveUser, idCurrentUser), idCurrentUser);
             }
-
         }
+        // TIME PROBLEMS HERE
 
-        TreeMap<Double, Integer> allNeighbors = (TreeMap<Double, Integer>)this.neighborsMatrix.get(idActiveUser).clone();
+        //TreeMap<Double, Integer> allNeighbors = (TreeMap<Double, Integer>)this.neighborsMatrix.Get(idActiveUser);
         TreeMap<Double, Integer> topKNeighbors = new TreeMap(Collections.reverseOrder());
 
-        Entry<Double, Integer> entry;
-        for (int i = 0; i < kSize && !allNeighbors.isEmpty(); ++i) {
-            entry = new SimpleEntry(allNeighbors.firstEntry());
-            allNeighbors.remove(entry.getKey());
+        int counter = 0;
+        for (Entry<Double, Integer> entry : this.neighborsMatrix.get(idActiveUser).entrySet()) {
             topKNeighbors.put(entry.getKey(), entry.getValue());
+            if (++counter >= kSize) {
+                break;
+            }
         }
-        return topKNeighbors;
 
+        if (filePrint) {
+            FileWriter fileWriter = new FileWriter("Neighborhood_User" + idActiveUser + ".txt");
+            fileWriter.Write("NEIGHBORHOOD");
+            fileWriter.Write("Active user: " + idActiveUser + " | k = " + kSize + " | Time: " + Calendar.getInstance().getTime().toString());
+            fileWriter.Write("");
+            fileWriter.Write("[Ord]\tUSER\t\tSIMILARITY");
+            int i = 0;
+            for (Entry<Double, Integer> entry : this.neighborsMatrix.get(idActiveUser).entrySet()) {
+                fileWriter.Write("[" + String.format("%3d", ++i) + "]\tUser '" + entry.getValue() + "':\t\t" + entry.getKey());
+            }
+            fileWriter.Close();
+        }
+
+        return topKNeighbors;
+    }
+
+    public void calculateSimilarityMatrix() {
+        double d;
+        for (int i = 0; i < users.count(); ++i) {
+            for (int j = i; j < users.count(); ++j) {
+                d = this.GetSimilarity(i, j);
+            }
+        }
     }
 
 }
