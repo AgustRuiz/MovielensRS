@@ -1,18 +1,5 @@
 package es.AgustRuiz.RecommenderSystem;
 
-import static java.lang.Math.abs;
-import static java.lang.Math.sqrt;
-import java.util.AbstractList;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Objects;
-import java.util.TreeMap;
-
 /**
  * Main class
  *
@@ -22,9 +9,9 @@ public class Main {
 
     public static UserHandler usersHandler;
     public static ItemHandler itemsHandler;
-    public static GenericTrainingHandler ratingsHandler;
-    public static GenericTrainingHandler ratingsTrainingHandler;
-    public static GenericTrainingHandler ratingsTestHandler;
+    public static GenericRatingHandler ratingsHandler;
+    public static GenericRatingHandler ratingsTrainingHandler;
+    public static GenericRatingHandler ratingsTestHandler;
     public static NeighborsHandler neighborhoodHandler;
     public static NeighborsHandler trainingNeighborhoodHandler;
 

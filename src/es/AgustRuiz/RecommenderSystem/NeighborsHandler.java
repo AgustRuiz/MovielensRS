@@ -6,10 +6,8 @@
 package es.AgustRuiz.RecommenderSystem;
 
 import static java.lang.Math.sqrt;
-import java.util.AbstractMap.SimpleEntry;
 import java.util.Calendar;
 import java.util.Collections;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -31,7 +29,7 @@ public class NeighborsHandler {
     private Vector<Integer> idUsers;
 
     /// Ratings handler
-    GenericTrainingHandler ratings;
+    GenericRatingHandler ratings;
 
     /// Similarity matrix: HashMap<user1, HashMap<user2, similarity>>
     HashMap<Pair_UserUser, Double> similarityMatrix;
@@ -46,7 +44,7 @@ public class NeighborsHandler {
      * @param users Users handler
      * @param ratings Ratings handler
      */
-    public NeighborsHandler(ItemHandler items, UserHandler users, GenericTrainingHandler ratings) {
+    public NeighborsHandler(ItemHandler items, UserHandler users, GenericRatingHandler ratings) {
         this.similarityMatrix = new HashMap();
         this.neighborsMatrix = new HashMap();
         this.items = items;
@@ -66,7 +64,6 @@ public class NeighborsHandler {
      * @param user2Id User Id 2
      */
     private void CalculateSimilarity(int user1Id, int user2Id) {
-
         if (user1Id == user2Id) {
             this.setValue(user1Id, user2Id, 1.0);
         } else {

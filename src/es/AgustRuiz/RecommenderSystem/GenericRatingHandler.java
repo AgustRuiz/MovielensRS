@@ -5,8 +5,6 @@
  */
 package es.AgustRuiz.RecommenderSystem;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;

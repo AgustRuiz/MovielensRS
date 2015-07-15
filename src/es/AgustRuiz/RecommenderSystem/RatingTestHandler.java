@@ -9,7 +9,7 @@ import java.util.HashMap;
  *
  * @author Agustin Ruiz Linares <arl00029@red.ujaen.es>
  */
-public class RatingTestHandler extends GenericTrainingHandler{
+public class RatingTestHandler extends GenericRatingHandler{
 
     @Override
     void LoadFromDb() {

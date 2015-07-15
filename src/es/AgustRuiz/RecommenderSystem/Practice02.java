@@ -5,14 +5,11 @@
  */
 package es.AgustRuiz.RecommenderSystem;
 
-import static es.AgustRuiz.RecommenderSystem.Main.trainingNeighborhoodHandler;
-import static es.AgustRuiz.RecommenderSystem.Main.ratingsTrainingHandler;
 import static es.AgustRuiz.RecommenderSystem.Main.ratingsTestHandler;
 import static java.lang.Math.abs;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-import java.util.Map;
 import java.util.Map.Entry;
 
 /**

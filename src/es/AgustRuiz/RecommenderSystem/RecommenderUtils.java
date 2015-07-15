@@ -5,7 +5,6 @@
  */
 package es.AgustRuiz.RecommenderSystem;
 
-import static es.AgustRuiz.RecommenderSystem.Main.usersHandler;
 import static es.AgustRuiz.RecommenderSystem.Main.itemsHandler;
 import static es.AgustRuiz.RecommenderSystem.Main.ratingsHandler;
 import static es.AgustRuiz.RecommenderSystem.Main.neighborhoodHandler;
@@ -67,11 +66,6 @@ public class RecommenderUtils {
      * @return
      */
     public static Double PredictRating_Training(int iduser, int iditem, int kSize) {
-        
-        if(iduser == 311 && iditem == 28){
-            System.out.println("QUIETORL!");
-        }
-        
         Double prediction = null;
         
         int currentIdUser;
