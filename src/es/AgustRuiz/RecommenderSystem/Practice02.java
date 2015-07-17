@@ -27,7 +27,7 @@ public class Practice02 {
      * @return All k values in string format
      */
     public static String getKSizes() {
-        if (kSizes.size() == 0) {
+        if (kSizes.isEmpty()) {
             return "none";
         } else {
             StringBuilder output = new StringBuilder();
@@ -36,7 +36,7 @@ public class Practice02 {
             }
             output.deleteCharAt(output.length() - 1);
             output.deleteCharAt(output.length() - 1);
-            output.append(" (total: " + kSizes.size() + ")");
+            output.append(" (total: ").append(kSizes.size()).append(")");
             return output.toString();
         }
     }
@@ -80,7 +80,7 @@ public class Practice02 {
         for (int kSize : kSizes) {
             System.out.print("Evaluating k = " + kSize + "... ");
             FileWriter fileWriter = new FileWriter("Evaluation_k" + kSize + ".txt");
-            fileWriter.Write("NEIGHBORHOOD");
+            fileWriter.Write("EVALUATION");
             fileWriter.Write("k = " + kSize + " | Time: " + Calendar.getInstance().getTime().toString());
             fileWriter.Write("");
             fileWriter.Write("[USER, ITEM]\t" + String.format("%18s", "PREDICTION") + "\t" + String.format("%18s", "REAL"));

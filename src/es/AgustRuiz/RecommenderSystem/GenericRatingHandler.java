@@ -17,6 +17,7 @@ public abstract class GenericRatingHandler {
     
     protected HashMap<Pair_UserItem, Double> ratingMap;
     protected HashMap<Integer, Double> avgUserRatings;
+    protected HashMap<Integer, Double> avgItemRatings;
     protected HashMap<Integer, HashMap<Integer, Double> > avgCorating;
 
     /**
@@ -25,6 +26,7 @@ public abstract class GenericRatingHandler {
     public GenericRatingHandler() {
         LoadFromDb();
         this.CalculateAvgUserRating();
+        this.CalculateAvgItemRating();
         this.avgCorating = new HashMap<>();
     }
 
@@ -40,7 +42,7 @@ public abstract class GenericRatingHandler {
      *
      * @return List of ratings from database
      */
-    abstract Double GetAvgCorating(int activeUserid, int referenceUserid);
+    abstract Double GetAvgCoratingUser(int activeUserid, int referenceUserid);
 
     /**
      * Calculate avg ratings for users
@@ -65,6 +67,30 @@ public abstract class GenericRatingHandler {
             }
             for (int iduser : accumulatorMap.keySet()) {
                 this.avgUserRatings.put(iduser, accumulatorMap.get(iduser) / counterMap.get(iduser));
+            }
+        }
+    }
+    
+    protected void CalculateAvgItemRating(){
+        if (this.avgItemRatings == null) {
+            this.avgItemRatings = new HashMap();
+        }
+        if (this.ratingMap.size() > 0) {
+            HashMap<Integer, Double> accumulatorMap = new HashMap();
+            HashMap<Integer, Integer> counterMap = new HashMap();
+            int currentIditem;
+            for (Map.Entry<Pair_UserItem, Double> e : this.ratingMap.entrySet()) {
+                currentIditem = e.getKey().iditem;
+                if (accumulatorMap.containsKey(currentIditem)) {
+                    accumulatorMap.put(currentIditem, accumulatorMap.get(currentIditem) + e.getValue());
+                    counterMap.put(currentIditem, counterMap.get(currentIditem) + 1);
+                } else {
+                    accumulatorMap.put(currentIditem, e.getValue());
+                    counterMap.put(currentIditem, 1);
+                }
+            }
+            for (int iditem : accumulatorMap.keySet()) {
+                this.avgItemRatings.put(iditem, accumulatorMap.get(iditem) / counterMap.get(iditem));
             }
         }
     }
@@ -101,6 +127,14 @@ public abstract class GenericRatingHandler {
     public Double GetAvgRatingsUser(int iduser) {
         if (this.avgUserRatings.containsKey(iduser)) {
             return this.avgUserRatings.get(iduser);
+        }else{
+            return null;
+        }
+    }
+    
+    public Double GetAvgRatingsItem(int iditem) {
+        if (this.avgItemRatings.containsKey(iditem)) {
+            return this.avgItemRatings.get(iditem);
         }else{
             return null;
         }

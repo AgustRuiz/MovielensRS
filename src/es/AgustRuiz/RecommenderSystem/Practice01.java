@@ -20,6 +20,7 @@ public class Practice01 {
 
     /**
      * Gets active user id
+     *
      * @return Active user id
      */
     public static int getActiveIduser() {
@@ -28,7 +29,8 @@ public class Practice01 {
 
     /**
      * Sets active user id
-     * @param activeIduser 
+     *
+     * @param activeIduser
      */
     public static void setActiveIduser(int activeIduser) {
         Practice01.activeIduser = activeIduser;
@@ -36,6 +38,7 @@ public class Practice01 {
 
     /**
      * Gets k size (of KNN)
+     *
      * @return k size (of KNN)
      */
     public static int getkSize() {
@@ -44,6 +47,7 @@ public class Practice01 {
 
     /**
      * Sets k size (of KNN)
+     *
      * @param kSize
      */
     public static void setkSize(int kSize) {
@@ -60,27 +64,26 @@ public class Practice01 {
         System.out.print("Calculating recommendations for user " + activeIduser + "... ");
         time = System.currentTimeMillis();
 
-        Map<Double, Integer> recommendations = RecommenderUtils.RecommendationsKNN(activeIduser, kSize);
+        Map<Integer, Double> recommendations = RecommenderUtils.RecommendationsKNN(activeIduser, kSize);
 
         System.out.println("Done in " + (System.currentTimeMillis() - time) + "ms!");
-        
+
         Practice01.PrintRecommendations(activeIduser, kSize, recommendations);
 
-        for (Entry<Double, Integer> entry : recommendations.entrySet()) {
-            System.out.println("Item: " + entry.getValue() + "\t Rating: " + entry.getKey());
+        for (Entry<Integer, Double> entry : recommendations.entrySet()) {
+            System.out.println("Item: " + entry.getKey() + "\t Rating: " + entry.getValue());
         }
     }
-    
-    public static void PrintRecommendations(int idActiveUser, int kSize,  Map<Double, Integer> recommendations){
-            FileWriter fileWriter = new FileWriter("Recommendations_User" + idActiveUser + ".txt");
-            fileWriter.Write("RECOMMENDATIONS");
-            fileWriter.Write("Active user: " + idActiveUser + " | k = " + kSize + " | Time: "+Calendar.getInstance().getTime().toString());
-            fileWriter.Write("");
-            fileWriter.Write("[Ord.]\tITEM\t\tRATING");
-            int i = 0;
-            for(Entry<Double, Integer> entry : recommendations.entrySet()){ 
-            fileWriter.Write("["+String.format("%4d", ++i)+"]\tItem'"+entry.getValue()+"':\t\t"+entry.getKey());
-            }
-            fileWriter.Close();
+
+    public static void PrintRecommendations(int idActiveUser, int kSize, Map<Integer, Double> recommendations) {
+        FileWriter fileWriter = new FileWriter("Recommendations_User" + idActiveUser + "_k" + kSize + ".txt");
+        fileWriter.Write("RECOMMENDATIONS");
+        fileWriter.Write("Active user: " + idActiveUser + " | k = " + kSize + " | Time: " + Calendar.getInstance().getTime().toString());
+        fileWriter.Write("");
+        fileWriter.Write("ITEM\tRATING");
+        for (Entry<Integer, Double> entry : recommendations.entrySet()) {
+            fileWriter.Write(String.format("%4s", entry.getKey()) + "\t" + entry.getValue());
+        }
+        fileWriter.Close();
     }
 }

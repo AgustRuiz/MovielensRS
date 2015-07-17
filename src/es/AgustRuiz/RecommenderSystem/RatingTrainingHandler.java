@@ -28,7 +28,7 @@ public class RatingTrainingHandler extends GenericRatingHandler {
     }
     
     @Override
-    Double GetAvgCorating(int activeUserid, int referenceUserid) {
+    Double GetAvgCoratingUser(int activeUserid, int referenceUserid) {
         if (!this.avgCorating.containsKey(activeUserid)) {
             this.avgCorating.put(activeUserid, new HashMap<Integer, Double>());
         }

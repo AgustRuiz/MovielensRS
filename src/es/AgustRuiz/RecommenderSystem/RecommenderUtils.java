@@ -11,7 +11,6 @@ import static es.AgustRuiz.RecommenderSystem.Main.neighborhoodHandler;
 import static es.AgustRuiz.RecommenderSystem.Main.ratingsTrainingHandler;
 import static es.AgustRuiz.RecommenderSystem.Main.trainingNeighborhoodHandler;
 import static java.lang.Math.abs;
-import java.util.Collections;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.TreeMap;
@@ -27,34 +26,17 @@ public class RecommenderUtils {
      * @param activeIdUser Neighborhood size
      * @return Recommendations in Map<Rating, IdItem> format
      */
-    public static Map<Double, Integer> RecommendationsKNN(int activeIdUser, int kSize) {
-        Map<Double, Integer> neighborhood = neighborhoodHandler.calculateKNN(activeIdUser, kSize, true);
-        Map<Double, Integer> recommendations = new TreeMap(Collections.reverseOrder());
+    public static Map<Integer, Double> RecommendationsKNN(int activeIdUser, int kSize) {
+        Map<Integer, Double> neighborhood = neighborhoodHandler.calculateKNN(activeIdUser, kSize, true);
+        Map<Integer, Double> recommendations = new TreeMap();
         Double avgActiveUser = ratingsHandler.GetAvgRatingsUser(activeIdUser);
-        Integer currentIdItem, currentIdUser;
+        Integer currentIdItem;
         for (Item item : itemsHandler.getSet()) {
             currentIdItem = item.getIditem();
-            Double dividend = 0.0, divisor = 0.0, similarity = 0.0, currentRating;
             if (ratingsHandler.Get(activeIdUser, currentIdItem) == null) {
-                for (Entry<Double, Integer> neighbor : neighborhood.entrySet()) {
-                    similarity = neighbor.getKey();
-                    currentIdUser = neighbor.getValue();
-                    currentRating = ratingsHandler.Get(currentIdUser, currentIdItem);
-                    if (currentRating != null) {
-                        //dividend += similarity * (currentRating - ratingsHandler.GetAvgRatingsUser(currentIdUser));
-                        Double avgCorated = ratingsHandler.GetAvgCorating(activeIdUser, currentIdUser);
-                        if (avgCorated != null) {
-                            dividend += similarity * (currentRating - avgCorated);
-                            divisor += abs(similarity);
-                        }
-                    }
-                }
-                if (divisor != 0) {
-                    double predictedRating = avgActiveUser + (dividend / divisor);
-                    if (predictedRating > 5) {
-                        predictedRating = 5.0;
-                    }
-                    recommendations.put(predictedRating, currentIdItem);
+                Double predictedRating = Prediction(neighborhood, activeIdUser, currentIdItem, ratingsHandler);
+                if (predictedRating != null) {
+                    recommendations.put(currentIdItem, predictedRating);
                 }
             }
         }
@@ -72,42 +54,45 @@ public class RecommenderUtils {
     public static Double PredictRating_Training(int iduser, int iditem, int kSize) {
         Double prediction = null;
 
-        int currentIdUser;
-        Double similarity, currentRating, dividend, divisor;
-        Double avgActiveUser = ratingsTrainingHandler.GetAvgRatingsUser(iduser);
+        Map<Integer, Double> neighborhood = trainingNeighborhoodHandler.calculateKNN(iduser, kSize, false);
 
-        Map<Double, Integer> neighborhood = trainingNeighborhoodHandler.calculateKNN(iduser, kSize, false);
-
-        dividend = new Double(0);
-        divisor = new Double(0);
-
-        if (ratingsTrainingHandler.Get(iduser, iditem) == null) {
-            for (Entry<Double, Integer> neighbor : neighborhood.entrySet()) {
-                similarity = neighbor.getKey();
-                currentIdUser = neighbor.getValue();
-                currentRating = ratingsTrainingHandler.Get(currentIdUser, iditem);
-                if (currentRating != null) {
-                    //dividend += similarity * (currentRating - ratingsTrainingHandler.GetAvgRatingsUser(currentIdUser));
-
-                    Double avgCorated = ratingsTrainingHandler.GetAvgCorating(iduser, currentIdUser);
-                    if (avgCorated != null) {
-                        dividend += similarity * (currentRating - avgCorated);
-                        divisor += abs(similarity);
-                    }
-                }
-                //break;
-            }
-            if (divisor != 0) {
-                prediction = avgActiveUser + (dividend / divisor);
-                if (prediction > 5) {
-                    prediction = 5.0;
-                }
-            }
-        } else {
-            prediction = ratingsTrainingHandler.Get(iduser, iditem);
+        prediction = ratingsTrainingHandler.Get(iduser, iditem);
+        if (prediction == null) {
+            prediction = Prediction(neighborhood, iduser, iditem, ratingsTrainingHandler);
         }
 
         return prediction;
     }
 
+    private static Double Prediction(Map<Integer, Double> neighborhood, int iduser, int iditem, GenericRatingHandler genericRatingHandler) {
+        Integer currentIdUser;
+        Double similarityNormalized, currentRating, prediction = null;
+        double dividend = 0.0, divisor = 0.0;
+
+        Double avgCurrentItem = genericRatingHandler.GetAvgRatingsItem(iditem);
+        //Double avgActiveUser = genericRatingHandler.GetAvgRatingsUser(iduser);
+
+        for (Entry<Integer, Double> neighbor : neighborhood.entrySet()) {
+            currentIdUser = neighbor.getKey();
+            similarityNormalized = NormalizeSimilarity(neighbor.getValue());
+            currentRating = genericRatingHandler.Get(currentIdUser, iditem);
+            if (currentRating != null) {
+                dividend += similarityNormalized * (currentRating - avgCurrentItem);
+                //dividend += similarityNormalized * (currentRating - avgCurrentUser);
+                divisor += abs(similarityNormalized);
+            }
+        }
+        if (divisor != 0) {
+            prediction = avgCurrentItem + (dividend / divisor);
+            //prediction = avgActiveUser + (dividend / divisor);
+            if (prediction > 5) {
+                prediction = 5.0;
+            }
+        }
+        return prediction;
+    }
+
+    private static Double NormalizeSimilarity(double pearsonSimilarity) {
+        return (pearsonSimilarity + 1) / 2;
+    }
 }

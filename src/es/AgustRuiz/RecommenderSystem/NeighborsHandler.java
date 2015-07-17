@@ -8,9 +8,15 @@ package es.AgustRuiz.RecommenderSystem;
 import static java.lang.Math.sqrt;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.Vector;
@@ -36,7 +42,7 @@ public class NeighborsHandler {
     HashMap<Pair_UserUser, Double> similarityMatrix;
 
     /// Neighbors matrix: HashMap<activeIduser HashMap<similarity, user2>>
-    HashMap<Integer, TreeMap<Double, Integer>> neighborsMatrix;
+    HashMap<Integer, HashMap<Integer, Double>> neighborsMatrix;
 
     /**
      * Constructor
@@ -77,8 +83,8 @@ public class NeighborsHandler {
                 if (ratings.Get(user1Id, iditem) != null && ratings.Get(user2Id, iditem) != null) {
                     //user1Calc = ratings.Get(user1Id, iditem) - ratings.GetAvgRatingsUser(user1Id);
                     //user2Calc = ratings.Get(user2Id, iditem) - ratings.GetAvgRatingsUser(user2Id);
-                    user1Calc = ratings.Get(user1Id, iditem) - ratings.GetAvgCorating(user1Id, user2Id);
-                    user2Calc = ratings.Get(user2Id, iditem) - ratings.GetAvgCorating(user2Id, user1Id);
+                    user1Calc = ratings.Get(user1Id, iditem) - ratings.GetAvgCoratingUser(user1Id, user2Id);
+                    user2Calc = ratings.Get(user2Id, iditem) - ratings.GetAvgCoratingUser(user2Id, user1Id);
                     dividend += user1Calc * user2Calc;
                     divisor1 += user1Calc * user1Calc;
                     divisor2 += user2Calc * user2Calc;
@@ -109,37 +115,41 @@ public class NeighborsHandler {
         return similarityMatrix.get(myPair);
     }
 
-    public TreeMap<Double, Integer> calculateKNN(int idActiveUser, int kSize, boolean filePrint) {
+    public TreeMap<Integer, Double> calculateKNN(int idActiveUser, int kSize, boolean filePrint) {
 
         // TIME PROBLEMS HERE
         if (!this.neighborsMatrix.containsKey(idActiveUser)) {
-            this.neighborsMatrix.put(idActiveUser, new TreeMap(Collections.reverseOrder()));
+            this.neighborsMatrix.put(idActiveUser, new HashMap());
             for (int idCurrentUser : this.idUsers) {
-                this.neighborsMatrix.get(idActiveUser).put(this.GetSimilarity(idActiveUser, idCurrentUser), idCurrentUser);
+                this.neighborsMatrix.get(idActiveUser).put(idCurrentUser, this.GetSimilarity(idActiveUser, idCurrentUser));
             }
+            // Remove active user
+            this.neighborsMatrix.get(idActiveUser).remove(idActiveUser);
         }
         // TIME PROBLEMS HERE
 
-        //TreeMap<Double, Integer> allNeighbors = (TreeMap<Double, Integer>)this.neighborsMatrix.Get(idActiveUser);
-        TreeMap<Double, Integer> topKNeighbors = new TreeMap(Collections.reverseOrder());
+        // Ordenate TreeMap
+        TreeMap<Integer, Double> topKNeighbors = new TreeMap();
 
+        Map<Integer, Double> neighborsSorted = sortByValues(this.neighborsMatrix.get(idActiveUser));
+        Set<Entry<Integer, Double> > neighborsSortedSet = neighborsSorted.entrySet();
+        Iterator iterator = neighborsSortedSet.iterator();
         int counter = 0;
-        for (Entry<Double, Integer> entry : this.neighborsMatrix.get(idActiveUser).entrySet()) {
+        while (iterator.hasNext() && counter < kSize) {
+            Entry<Integer, Double> entry = (Entry<Integer, Double>)iterator.next();
             topKNeighbors.put(entry.getKey(), entry.getValue());
-            if (++counter >= kSize) {
-                break;
-            }
+            ++counter;
         }
 
         if (filePrint) {
-            FileWriter fileWriter = new FileWriter("Neighborhood_User" + idActiveUser + ".txt");
-            fileWriter.Write("NEIGHBORHOOD");
-            fileWriter.Write("Active user: " + idActiveUser + " | k = " + kSize + " | Time: " + Calendar.getInstance().getTime().toString());
+            FileWriter fileWriter = new FileWriter("Neighbors_User" + idActiveUser + ".txt");
+            fileWriter.Write("NEIGHBORS");
+            fileWriter.Write("Active user: " + idActiveUser + " | Time: " + Calendar.getInstance().getTime().toString());
             fileWriter.Write("");
             fileWriter.Write("[Ord]\tUSER\t\tSIMILARITY");
             int i = 0;
-            for (Entry<Double, Integer> entry : this.neighborsMatrix.get(idActiveUser).entrySet()) {
-                fileWriter.Write("[" + String.format("%3d", ++i) + "]\tUser '" + entry.getValue() + "':\t\t" + entry.getKey());
+            for (Entry<Integer, Double> entry : this.neighborsMatrix.get(idActiveUser).entrySet()) {
+                fileWriter.Write("[" + String.format("%3d", ++i) + "]\tUser '" + entry.getKey() + "':\t\t" + entry.getValue());
             }
             fileWriter.Close();
         }
@@ -156,4 +166,24 @@ public class NeighborsHandler {
         }
     }
 
+    private static HashMap sortByValues(HashMap map) {
+        List list = new LinkedList(map.entrySet());
+        // Defined Custom Comparator here
+        Collections.sort(list, new Comparator() {
+            public int compare(Object o1, Object o2) {
+                return ((Comparable) ((Map.Entry) (o1)).getValue())
+                        .compareTo(((Map.Entry) (o2)).getValue());
+            }
+        });
+
+        // Here I am copying the sorted list in HashMap
+        // using LinkedHashMap to preserve the insertion order
+        HashMap sortedHashMap = new LinkedHashMap();
+        //for (Iterator it = list.iterator(); it.hasNext();) {
+        for (int i = list.size()-1 ; i >= 0 ; --i){
+            Map.Entry entry = (Map.Entry)list.get(i);
+            sortedHashMap.put(entry.getKey(), entry.getValue());
+        }
+        return sortedHashMap;
+    }
 }
