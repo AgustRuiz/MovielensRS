@@ -3,35 +3,42 @@ package es.AgustRuiz.RecommenderSystem;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Item DAO
  * @author Agustin Ruiz Linares <arl00029@red.ujaen.es>
  */
-public class ItemDAO {
+public class ItemHandler {
+    
+    private HashMap<Integer, Item> itemsMap;
 
     /**
-     * Gets the list of Items from database
-     * @return HashMap<id, item> of Items from database
+     * Constructor
      */
-    public static HashMap<Integer, Item> getList() {
-        HashMap<Integer, Item> itemsMap = new HashMap();
+    public ItemHandler() {
+        this.loadFromDb();
+    }
+
+    /**
+     * Loads Items from database
+     */
+    private void loadFromDb() {
+        this.itemsMap = new HashMap();
         try {
             PreparedStatement query = DbConnection.getConnection().prepareStatement("SELECT * FROM items");
             ResultSet rs = query.executeQuery();
             while (rs.next()) {
-                Item item = ItemDAO.fillItem(rs);
-                itemsMap.put(item.getIditem(), item);
+                Item item = ItemHandler.fillItem(rs);
+                this.itemsMap.put(item.getIditem(), item);
             }
             rs.close();
             query.close();
         } catch (Exception e) {
             System.err.println("Can't get list of items from database. " + e);
         }
-        return itemsMap;
     }
 
     /**
@@ -39,41 +46,31 @@ public class ItemDAO {
      * @param iditem Item Id fo filter
      * @return The first item found with iditem or null otherwise
      */
-    public static Item get(int iditem) {
-        Item item = null;
-        try {
-            PreparedStatement query = DbConnection.getConnection().prepareStatement("SELECT * FROM items WHERE iditem = " + iditem);
-            ResultSet rs = query.executeQuery();
-            if (rs.next()) {
-                item = ItemDAO.fillItem(rs);
-            }
-            rs.close();
-            query.close();
-        } catch (Exception e) {
-            System.err.println("Can't get item " + iditem + " from database. " + e);
+    public Item get(int iditem) {
+        if(this.itemsMap.containsKey(iditem)){
+            return this.itemsMap.get(iditem);
+        }else{
+            return null;
         }
-        return item;
+    }
+    
+    /**
+     * Get collection of items
+     * @return Collection of items
+     */
+    public Set<Item> getSet(){
+        return new HashSet<Item>(this.itemsMap.values());
     }
     
     /**
      * Counts numbers of Items
      * @return Numbers of Items
      */
-    public static Integer count(){
-        Integer size = -1;
-        try {
-            PreparedStatement query = DbConnection.getConnection().prepareStatement("SELECT COUNT(*) FROM items");
-            ResultSet rs = query.executeQuery();
-            if (rs.next()) {
-                size = rs.getInt(1);
-            }
-            rs.close();
-            query.close();
-        } catch (Exception e) {
-            System.err.println("Can't get size of Items table from database. " + e);
-        }
-        return size;
+    public int count(){
+        return this.itemsMap.size();
     }
+    
+    /* * * PRIVATE METHODS * * */
     
     /**
      * Fills an Item from a ResultSet

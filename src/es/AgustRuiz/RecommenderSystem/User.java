@@ -1,7 +1,5 @@
 package es.AgustRuiz.RecommenderSystem;
 
-import java.sql.Struct;
-
 /**
  * User class
  * @author Agustin Ruiz Linares <arl00029@red.ujaen.es>

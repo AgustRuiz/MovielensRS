@@ -1,6 +1,5 @@
 package es.AgustRuiz.RecommenderSystem;
 
-import java.util.AbstractList;
 import java.util.ArrayList;
 import java.util.List;
 
